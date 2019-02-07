@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /examples/
+
+Sitemap: https://blog.itsail.ru/sitemap.xml
+Host: blog.itsail.ru
