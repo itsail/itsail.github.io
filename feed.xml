@@ -5,8 +5,8 @@
     <description>Блог об операционных системах, open source и программировании.</description>
     <link>https://blog.itsail.ru/</link>
     <atom:link href="https://blog.itsail.ru/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Feb 2019 19:33:46 +0300</pubDate>
-    <lastBuildDate>Thu, 07 Feb 2019 19:33:46 +0300</lastBuildDate>
+    <pubDate>Thu, 07 Feb 2019 19:42:04 +0300</pubDate>
+    <lastBuildDate>Thu, 07 Feb 2019 19:42:04 +0300</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
@@ -33,13 +33,13 @@
 
 </description>
         <pubDate>Thu, 07 Feb 2019 11:10:00 +0300</pubDate>
-        <link>https://blog.itsail.ru/posts/statistics-optimization-of-mobile-website-which-will-surprise-you/</link>
-        <guid isPermaLink="true">https://blog.itsail.ru/posts/statistics-optimization-of-mobile-website-which-will-surprise-you/</guid>
+        <link>https://blog.itsail.ru/blog/statistics-optimization-of-mobile-website-which-will-surprise-you/</link>
+        <guid isPermaLink="true">https://blog.itsail.ru/blog/statistics-optimization-of-mobile-website-which-will-surprise-you/</guid>
         
         <category>Продвижение</category>
         
         
-        <category>posts</category>
+        <category>blog</category>
         
       </item>
     
