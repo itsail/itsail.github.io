@@ -1,0 +1,18 @@
+---
+layout: compress
+---
+<!DOCTYPE html>
+<html lang="ru">
+  {% include head.html %}
+  <body>
+    <div id="shadow"></div>
+    {% if page.layout != 'postt' %}
+      {% include header.html %}
+    {% endif %}
+    {% include aside.html %}
+    <main class="content-wrapper">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </body>
+</html>

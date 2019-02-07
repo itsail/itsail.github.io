@@ -1,0 +1,20 @@
+---
+layout: default
+crawlertitle: "Блог компании ITSail :: Парус Вашего Бизнеса"
+title: Блог компании ITSail
+summary:
+bg: 'index/index.jpg'
+bg_out_vk: 'index/index_537x240.jpg'
+bg_post_fb: 'index/index_1200x630.jpg'
+bg_post_instagram: 'index/index_1080x1080.jpg'
+bg_post_ok: 'index/index_1680x1680.jpg'
+bg_post_twitter: 'index/index_1024x512.jpg'
+bg_post_vk: 'index/index_700x500.jpg'
+---
+
+{% for post in site.posts limit: 5 %}
+  <article class="index-page">
+    <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+    {{ post.excerpt }}
+  </article>
+{% endfor %}

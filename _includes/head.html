@@ -1,0 +1,68 @@
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		{% if page.crawlertitle %}
+			{{ page.crawlertitle | escape }}
+		{% elsif page.title %}
+			{{ page.title | escape }}
+		{% else %}
+			{{ site.title | escape }}
+		{% endif %}
+	</title>
+
+	<meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+	<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="/feed.xml">
+	<link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+
+	<meta name="google-site-verification" content="">
+	<meta name="yandex-verification" content="" />
+
+	<link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans+Narrow:700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="{{ "/assets/styles/main.css" | relative_url }}">
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+	<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="{{ page.title }}">
+	<meta property="og:description" content="{{ page.summary }}">
+	<meta property="og:site_name" content="{{ site.title }}">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+	<meta name="twitter:title" content="{{ page.title }}">
+	<meta name="twitter:description" content="{{ page.summary }}">
+	{% if page.bg %}
+		<meta property="og:image" content="{{ site.url }}{{ site.images }}/{{ page.bg }}">
+		<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/{{ page.bg }}">
+		
+		{% if page.bg_out_vk %}
+			<meta property="og:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_out_vk }}">
+			<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_out_vk }}">
+		{% endif %}
+		{% if page.bg_post_fb %}
+			<meta property="og:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_fb }}">
+			<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_fb }}">
+		{% endif %}
+		{% if page.bg_post_instagram %}
+			<meta property="og:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_instagram }}">
+			<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_instagram }}">
+		{% endif %}
+		{% if page.bg_post_ok %}
+			<meta property="og:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_ok }}">
+			<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_ok }}">
+		{% endif %}
+		{% if page.bg_post_twitter %}
+			<meta property="og:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_twitter }}">
+			<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_twitter }}">
+		{% endif %}
+		{% if page.bg_post_vk %}
+			<meta property="og:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_vk }}">
+			<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/{{ page.bg_post_vk }}">
+		{% endif %}
+	{% else %}
+		<meta property="og:image" content="{{ site.url }}{{ site.images }}/bg.svg">
+		<meta name="twitter:image" content="{{ site.url }}{{ site.images }}/bg.svg">
+	{% endif %}
+</head>
