@@ -38,6 +38,10 @@ sass:
 
 images: '/assets/images'
 
+exclude:
+  - deploy.sh
+  - Gemfile
+  - Gemfile.lock
 
 plugins:
   - jekyll-feed
