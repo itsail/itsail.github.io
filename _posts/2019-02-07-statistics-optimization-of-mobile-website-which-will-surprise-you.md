@@ -6,7 +6,7 @@ tags: [Продвижение]
 slug: statistics-optimization-of-mobile-website-which-will-surprise-you
 author: ITSail
 summary: Ожидается, что с 2016 по 2021 год глобальный трафик мобильных данных увеличится почти в семь раз
-categories: posts
+categories: blog
 bg: '2019/statistics_optimization_index.jpg'
 bg_out_vk: '2019/statistics_optimization_537x240.jpg'
 bg_post_fb: '2019/statistics_optimization_1200x630.jpg'
