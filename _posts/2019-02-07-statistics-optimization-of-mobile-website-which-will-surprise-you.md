@@ -5,6 +5,7 @@ date: 2019-02-07 11:10
 tags: [Продвижение]
 slug: statistics-optimization-of-mobile-website-which-will-surprise-you
 author: ITSail
+sources_url: https://itsail.ru/blog/news/statistika-optimizatsii-mobilnogo-sayta-kotoraya-smozhet-vas-udivit/
 summary: Ожидается, что с 2016 по 2021 год глобальный трафик мобильных данных увеличится почти в семь раз
 categories: blog
 bg: '2019/statistics_optimization_index.jpg'
@@ -29,7 +30,3 @@ bg_post_vk: '2019/statistics_optimization_700x500.jpg'
 9. Компании с мобильными оптимизированными сайтами утроят свои шансы на повышение конверсии до 5% и более;
 10. 40% потребителей собираются обратиться к сайту конкурента после неудачного мобильного опыта;
 11. 55% конверсий, связанных с покупкой, происходят в течение 1 часа после первоначального мобильного поиска.
-
-<span class="sources">[Источник](https://itsail.ru/blog/news/statistika-optimizatsii-mobilnogo-sayta-kotoraya-smozhet-vas-udivit/)</span>
-
-<style>@charset "UTF-8";.sources{display:block;padding:10px 25px;font-size:15px;line-height:25px;font-family:Montserrat,Arial,sans-serif;color:#333;border:1px solid #f1f1f1;background-color:#f8f9fb}.sources::before,.sources:before{content:'»';padding-right:5px}.sources a{color:inherit;text-decoration:none}</style>

@@ -5,6 +5,7 @@ date: 2019-02-07 11:10
 tags: [Продвижение]
 slug: 5-ways-to-increase-instagram-audience
 author: ITSail
+sources_url: https://itsail.ru/blog/news/5-sposobov-uvelicheniya-auditorii-instagram/
 summary: С потрясающей статистикой роста пользователей, удобными публикациями и возможностью взаимодействия...
 categories: blog
 bg: '2019/instagram_audience_index.jpg'
@@ -57,7 +58,3 @@ bg_post_vk: '2019/instagram_audience_700x500.jpg'
 После того как вы создали положительное присутствие на Instagram площадке, публикуя качественный контент, поделитесь своими сообщениями с помощью влиятельных лиц. Это исключительный способ привлечь новых пользователей.
 
 ![Комментарии популятного аккаунта :: Продвигайте свой аккаунт с помощью влиятельных людей](/assets/images/2019/instagram_audience_4.jpg "Комментарии популятного аккаунта :: Продвигайте свой аккаунт с помощью влиятельных людей")
-
-<span class="sources">[Источник](https://itsail.ru/blog/news/5-sposobov-uvelicheniya-auditorii-instagram/)</span>
-
-<style>@charset "UTF-8";.sources{display:block;padding:10px 25px;font-size:15px;line-height:25px;font-family:Montserrat,Arial,sans-serif;color:#333;border:1px solid #f1f1f1;background-color:#f8f9fb}.sources::before,.sources:before{content:'»';padding-right:5px}.sources a{color:inherit;text-decoration:none}</style>
