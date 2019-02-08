@@ -11,8 +11,9 @@ layout: default
     {% endif %}
     &nbsp;/&nbsp;
 
-    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <span itemprop="name">{{ site.author }}</span>
+	<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+		<span itemprop="name">{% if page.author %}{{ page.author }}{% else %}{{ site.author }}{% endif %}</span>
+		{% if page.sources_url %}&nbsp;/&nbsp; <a itemprop="url" rel="nofollow" href="{{ page.sources_url }}" target="_blank">Источник</a>{% endif %}
     </span>
 
     <span class="hidden" itemprop="datePublished" content="{{ page.date | date: "%Y-%m-%d" }}"></span>
