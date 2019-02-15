@@ -5,8 +5,8 @@
     <description>Блог об операционных системах, open source и программировании.</description>
     <link>https://blog.itsail.ru/</link>
     <atom:link href="https://blog.itsail.ru/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 08 Feb 2019 14:37:08 +0300</pubDate>
-    <lastBuildDate>Fri, 08 Feb 2019 14:37:08 +0300</lastBuildDate>
+    <pubDate>Fri, 15 Feb 2019 17:29:14 +0300</pubDate>
+    <lastBuildDate>Fri, 15 Feb 2019 17:29:14 +0300</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
@@ -234,6 +234,2353 @@
         <guid isPermaLink="true">https://blog.itsail.ru/blog/5-ways-to-increase-instagram-audience/</guid>
         
         <category>Продвижение</category>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>8 правил хорошего тона [битрикс для начинающих]</title>
+        <description>&lt;p&gt;Недавно обсуждали в сообществе для разработчиков, кому сколько доставалось хорошо сделанных проектов на битриксе. Результаты неутешительные — 1–2 в среднем ответили разработчики.&lt;/p&gt;
+
+&lt;p&gt;Под “хорошо” подразумевается соблюдение базовых принципов разработки веб-проектов в целом и при работе с битриксом в частности. Многие [начинающие] разработчики не знают, как делать “хорошо”.&lt;/p&gt;
+
+&lt;p&gt;Поэтому решил подготовить краткую заметку на эту тему.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;1-Используйте-компоненты&quot;&gt;1. Используйте компоненты&lt;/h2&gt;
+
+&lt;p&gt;Помещайте весь php-код и шаблонизацию в компоненты.&lt;/p&gt;
+
+&lt;p&gt;Часто можно встретить сложный php-код прямо в индексной странице раздела или любой другой. Если редактировать такую страницу через виз. редактор, то легко можно “все сломать”, и вот основные причины:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;виз. редактор на этапе разбора и визуализации содержимого страницы может допустить ошибки,&lt;/li&gt;
+  &lt;li&gt;пользователь может случайно внести правки “несовместимые с жизнью” в php-код и даже не поймет этого, а все сломается.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Так быть не должно. Любой код отвечающий за бизнес-логику приложения должен быть вынесен в собственные компоненты и модули. На страницах должны располагаться только компоненты.&lt;/p&gt;
+
+&lt;p&gt;Такой подход позволит:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;избежать проблем описанных выше,&lt;/li&gt;
+  &lt;li&gt;снизить вероятность дублирования кода,&lt;/li&gt;
+  &lt;li&gt;управлять заложенной логикой через настройки компонентов.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;2-Храните-данные-в-кеше&quot;&gt;2. Храните данные в кеше&lt;/h2&gt;
+
+&lt;p&gt;Результаты тяжелых вычислений и любых выборок из БД следует хранить в кеше.&lt;/p&gt;
+
+&lt;p&gt;Основные способы кеширования:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;файлы,&lt;/li&gt;
+  &lt;li&gt;memcache,&lt;/li&gt;
+  &lt;li&gt;Redis.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Даже файлов кеш будет работать на несколько порядков быстрее, чем повторная подготовка данных. Что уж говорить про кеш в оперативной памяти.&lt;/p&gt;
+
+&lt;p&gt;Битрикс умеет кешировать результаты работы компонентов в файлах и в memcache. Для Redis’a можно написать свой адаптер. PHP акселераторы для этих целей не рассматриваем - пусть занимаются своей основной задачей.&lt;/p&gt;
+
+&lt;p&gt;В итоге место хранения кеша определяется &lt;noindex&gt;&lt;a href=&quot;https://dev.1c-bitrix.ru/learning/course/index.php?COURSE_ID=43&amp;amp;LESSON_ID=2795&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;настройками в файле .settings.php&lt;/a&gt;&lt;/noindex&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Пример кода для работы с кешем:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Создаем объект для работы с кешем (способ кеширования задается в .settings.php)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$obCache&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Bitrix\Main\Data\Cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;createInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Время жизни кеша, в секундах&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$timeout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Уникальный ключ для кешированных данных&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// на основании входных данных&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$cacheKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;md5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arParams&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Путь относительно /bitrix/cache/&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Т.о. можно сбросить часть, а не весь кеш проекта.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Для этого надо удалить папку /bitrix/cache/my/subdir/&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$cacheDir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/my/subdir/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+
+&lt;span class=&quot;c1&quot;&gt;// Если кэш валиден&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$obCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;InitCache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$cacheKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$cacheDir&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Извлекаем данные из кэша&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$obCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;GetVars&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Если кэш невалиден&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;elseif&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$obCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;StartDataCache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Тяжелые вычисления&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hardWork&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Сохраняем данные в кэш&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$obCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;EndDataCache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$result&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Работаем с данными ( $result )&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;3-Используйте-модули&quot;&gt;3. Используйте модули&lt;/h2&gt;
+
+&lt;p&gt;Выносите сложную бизнес-логику в модули.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Модуль&lt;/strong&gt; - это модель данных и API для доступа к этим данным. Статические методы классов модуля могут вызываться в компонентах, шаблонах, других модулях.&lt;/p&gt;
+
+&lt;p&gt;Модуль может состоять только из файлов с классами и не иметь интерфейса в админке или публичке. Главное, что код будет логически сгруппирован и размещен согласно логике битрикса. Модули намного легче поддерживать и расширять.&lt;/p&gt;
+
+&lt;h2 id=&quot;4-Следите-за-оформлением-кода&quot;&gt;4. Следите за оформлением кода&lt;/h2&gt;
+
+&lt;p&gt;Основные требования к оформлению кода, кстати довольно простые:&lt;/p&gt;
+
+&lt;h3 id=&quot;Именование&quot;&gt;Именование&lt;/h3&gt;
+
+&lt;p&gt;Названия переменных, констант, классов и функций - должно быть осмысленным.&lt;/p&gt;
+
+&lt;h3 id=&quot;Выравнивание&quot;&gt;Выравнивание&lt;/h3&gt;
+
+&lt;p&gt;Следите за табуляцией во вложенных блоках.&lt;/p&gt;
+
+&lt;h3 id=&quot;Отступы&quot;&gt;Отступы&lt;/h3&gt;
+
+&lt;p&gt;Разделяйте логические блоки кода одной пустой строкой.&lt;/p&gt;
+
+&lt;h3 id=&quot;Комментарии&quot;&gt;Комментарии&lt;/h3&gt;
+
+&lt;p&gt;По большому счету код должен быть самодокументируемым. Этому способоствют семантичные названия переменных, методов и тд.&lt;/p&gt;
+
+&lt;p&gt;Комментарии размещайте над кодом.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Пример кода с комментариями:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/*
+* Отправляем почтовые уведомления после регистрации через соц. сети,
+* так как по умолчанию они не отправляются.
+* В коде регистрации через соц. сети видно, что используется просто метод CUser-&amp;gt;Add(...).
+* */&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;\Bitrix\Main\EventManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addEventHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;main&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;OnAfterUserAdd&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;socServdRegistrHandler&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;или:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Отправляем почтовые уведомления после регистрации через соц. сети,&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// так как по умолчанию они не отправляются.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// В коде регистрации через соц. сети видно, что используется просто метод CUser-&amp;gt;Add(...).&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;\Bitrix\Main\EventManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addEventHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;main&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;OnAfterUserAdd&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;socServdRegistrHandler&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Однако стоит добавлять комментарии, когда логика нетривиальна. Пожалуйста, не пишите “что здесь происходит”, а пишите “почему это происходит”. Вы пишите код для людей, которые будут работать с ним после вас, представьте себя на их месте и какие вопросы у них возникнут.&lt;/p&gt;
+
+&lt;p&gt;Пишите комментарии к классам - какие задачи в целом решает данный класс. Пишите комментарии к методам - в стили &lt;noindex&gt;&lt;a href=&quot;http://omurashov.ru/docblock-in-php-documentation/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;PhpDoc&lt;/a&gt;&lt;/noindex&gt;, описывайте суть метода, входные и выходные параметры и тд.&lt;/p&gt;
+
+&lt;h3 id=&quot;Вынесение-кода-в-классы-и-функции&quot;&gt;Вынесение кода в классы и функции&lt;/h3&gt;
+
+&lt;p&gt;Следите за порядком в вашем коде с самого начала. Группируйте код. Используйте код повторно, но не копируйте его, а оформляйте его в виде отдельного метода и тд.&lt;/p&gt;
+
+&lt;h3 id=&quot;Классы&quot;&gt;Классы&lt;/h3&gt;
+
+&lt;p&gt;Один класс - один файл. Больше ничего не должно быть в файле с классом. Файл должен называться так же, как и класс:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// SomeClass.php&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SomeClass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// some code&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;Содержимое-файла-initphp&quot;&gt;Содержимое файла init.php&lt;/h3&gt;
+
+&lt;p&gt;Не захламляйте файл init.php тоннами строк кода.&lt;/p&gt;
+
+&lt;p&gt;Подключайте там только “заголовочные” файлы:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;events.php - регистрация обработчиков событий,&lt;/li&gt;
+  &lt;li&gt;constants.php - константы,&lt;/li&gt;
+  &lt;li&gt;functions.php - общие функции.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Пример файла init.php:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// AddMessage2Log() будет записывать логи сюда и разбивать их по дням&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;LOG_FILENAME&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DOCUMENT_ROOT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/_logs/bx/&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Y_m_d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;.log&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// автозагрузчик для всех классов проекта с соблюдением стандарта PSR-4&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;spl_autoload_register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str_replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\\'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;nv&quot;&gt;$path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DOCUMENT_ROOT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/local/lib/'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'.php'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;is_readable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;require_once&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// константы&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;require_once&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DOCUMENT_ROOT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/local/php_interface/constants.php&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// общие функции&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;require_once&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DOCUMENT_ROOT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/local/php_interface/functions.php&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// регистрация обработчиков событий&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;require_once&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DOCUMENT_ROOT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/local/php_interface/events.php&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;Подключение-классов&quot;&gt;Подключение классов&lt;/h3&gt;
+
+&lt;p&gt;Когда классов в проекте мало — можно подключить их все вручную сразу или по мере необходимости.&lt;/p&gt;
+
+&lt;p&gt;Когда классов в проекте много — такой подход не годится. Если подключить все сразу — будем зря забивать оперативную память кодом, который может не пригодиться. Если подключать по мере необходимости — получается слишком заморочно повсюду прописывать инклуды.&lt;/p&gt;
+
+&lt;p&gt;В этом случае удобнее и оптимальнее использовать автозагрузку классов.&lt;/p&gt;
+
+&lt;p&gt;Рассмотрим два основных способа:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;spl_autoload_register(...)&lt;/code&gt; — на уровне php,&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Loader::registerAutoLoadClasses(...)&lt;/code&gt; — на уровне ядра битрикса.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Между ними есть принципиальная разница в том, как они подключают файлы.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;registerAutoLoadClasses&lt;/code&gt; — требует явно прописать список всех классов, которые могут быть подключены и пути к ним.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;spl_autoload_register&lt;/code&gt; — на основании имени класса динамически вычисляет путь где хранится файл и подключает его.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;5-Следите-за-расположением-кода&quot;&gt;5. Следите за расположением кода&lt;/h2&gt;
+
+&lt;p&gt;Используйте папку &lt;code class=&quot;highlighter-rouge&quot;&gt;local&lt;/code&gt;. Это особенно удобно при использовании системы контроля версий. Начиная с 14 версии продукта, появилась поддержка папки &lt;code class=&quot;highlighter-rouge&quot;&gt;/local/&lt;/code&gt;. В ней можно размещать весь пользовательский код проекта:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;шаблоны сайтов и компонентов,&lt;/li&gt;
+  &lt;li&gt;компоненты,&lt;/li&gt;
+  &lt;li&gt;модули,&lt;/li&gt;
+  &lt;li&gt;и прочее.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Для классов проекта используйте папку &lt;code class=&quot;highlighter-rouge&quot;&gt;/local/lib/&lt;/code&gt;. В остальном по аналогии.&lt;/p&gt;
+
+&lt;h2 id=&quot;6-Работайте-на-копии-проекта&quot;&gt;6. Работайте на копии проекта&lt;/h2&gt;
+
+&lt;p&gt;Это общее правило для любых проектов.&lt;/p&gt;
+
+&lt;p&gt;Разработка на боевом сайте неизбежно связана с неработоспособностью сайта во время отладки, ошибками и иногда даже с падением сервера. Зачем рисковать своей репутацией и тратить нервы клиента - для него ошибка на сайте это конец света :) Так часто работают новички - они не знают как работать по-другому. И так работают лентяи и халтурщики - они думают, что так быстрее, но это не так.&lt;/p&gt;
+
+&lt;p&gt;Занимайтесь разработкой на локальной копии проекта - это очень удобно, весь проект, как на ладони. Особенно, если работать в IDE, а не в блокноте :)&lt;/p&gt;
+
+&lt;p&gt;Я работаю в PhpStorm, он идеально подходит для [локальной] разработки сайтов. Преимуществ очень много и трудно выделить несколько главных.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Преимущества PhpStorm:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Подсветка синтаксиса&lt;/li&gt;
+  &lt;li&gt;Подсказка и автозаполнение&lt;/li&gt;
+  &lt;li&gt;Просмотр описания объектов – PhpDoc&lt;/li&gt;
+  &lt;li&gt;Быстрый просмотр исходного кода функции&lt;/li&gt;
+  &lt;li&gt;Переход к определению&lt;/li&gt;
+  &lt;li&gt;Подсказка аргументов функции&lt;/li&gt;
+  &lt;li&gt;Поиск использования функции&lt;/li&gt;
+  &lt;li&gt;Поиск по всему проекту – то самое «умение быстро разбираться в чужом коде»&lt;/li&gt;
+  &lt;li&gt;Навигация по открытым файлам и панелям&lt;/li&gt;
+  &lt;li&gt;Работа с кодировками&lt;/li&gt;
+  &lt;li&gt;Интеграция с Git&lt;/li&gt;
+  &lt;li&gt;Построчная отладка PHP приложений&lt;/li&gt;
+  &lt;li&gt;Поддержка TODO директив&lt;/li&gt;
+  &lt;li&gt;Встроенный терминал&lt;/li&gt;
+  &lt;li&gt;Логическая структура файла&lt;/li&gt;
+  &lt;li&gt;Файловый менеджер&lt;/li&gt;
+  &lt;li&gt;Встроенный FTP клиент&lt;/li&gt;
+  &lt;li&gt;Публикация изменений на удаленный сервер&lt;/li&gt;
+  &lt;li&gt;Синхронизация файлов с удаленным сервером&lt;/li&gt;
+  &lt;li&gt;Работа с БД&lt;/li&gt;
+  &lt;li&gt;Инструменты для рефакторинга&lt;/li&gt;
+  &lt;li&gt;Быстрый переход к нужному файлу / папке по приблизительному пути&lt;/li&gt;
+  &lt;li&gt;Навигация по истории контекста (переходы курсора)&lt;/li&gt;
+  &lt;li&gt;Быстрый переход к классу / функции по имени&lt;/li&gt;
+  &lt;li&gt;Поиск любых операций IDE по названию&lt;/li&gt;
+  &lt;li&gt;Локальная история изменений&lt;/li&gt;
+  &lt;li&gt;Навигация по изменным местам в файле (между коммитами)&lt;/li&gt;
+  &lt;li&gt;Мощная система навигации по проекту&lt;/li&gt;
+  &lt;li&gt;Закладки прямо в коде&lt;/li&gt;
+  &lt;li&gt;Закладки файлов, можно именованными группами&lt;/li&gt;
+  &lt;li&gt;Сворачивание произвольных участков кода&lt;/li&gt;
+  &lt;li&gt;Сохранение / загрузка контекста&lt;/li&gt;
+  &lt;li&gt;Интеграция с системами учета задач&lt;/li&gt;
+  &lt;li&gt;Полноэкранный режим&lt;/li&gt;
+  &lt;li&gt;Несколько проектов одновременно&lt;/li&gt;
+  &lt;li&gt;Упрощенный режим для слабых компьютеров&lt;/li&gt;
+  &lt;li&gt;Множество плагинов&lt;/li&gt;
+  &lt;li&gt;Проверка синтаксиса, стиля кода и много чего еще&lt;/li&gt;
+  &lt;li&gt;Навигация по открытым вкладкам через hot keys&lt;/li&gt;
+  &lt;li&gt;Быстрый поиск всего (файлов/функций/классов) по всему проекту&lt;/li&gt;
+  &lt;li&gt;Быстрая навигация по структуре документа&lt;/li&gt;
+  &lt;li&gt;И еще множество крутых штук&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;7-Используйте-git&quot;&gt;7. Используйте Git&lt;/h2&gt;
+
+&lt;p&gt;Используйте систему контроля версий (СКВ), например Git.&lt;/p&gt;
+
+&lt;p&gt;Много разработчиков, до сих пор, не понимают необходимость контролировать изменения в файлах с исходным кодом. А многие и вовсе не знают что такое СКВ, например Git, и как ей пользоваться.&lt;/p&gt;
+
+&lt;p&gt;К сожалению, СКВ решает задачу только применительно к файлам. Изменения в базе данных с помощью СКВ не отследить. На текущий момент СКВ для БД — это почти утопия.&lt;/p&gt;
+
+&lt;p&gt;Сейчас мы рассмотрим только основные причины для использования СКВ и настройку исключений.&lt;/p&gt;
+
+&lt;p&gt;Почему нужно использовать систему контроля версий:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;одновременная работа нескольких человек над проектом&lt;/li&gt;
+  &lt;li&gt;возможность быстро обнаружить и откатить, все не зафиксированные изменения&lt;/li&gt;
+  &lt;li&gt;возможность быстро откатить ошибочные, уже зафиксированные, изменения&lt;/li&gt;
+  &lt;li&gt;история всех изменений в проекте, с указанием даты и авторов&lt;/li&gt;
+  &lt;li&gt;возможность изучить процесс развития проекта&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Однако не все файлы следует держать под контролем, например:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ядро битрикса,&lt;/li&gt;
+  &lt;li&gt;файлы IDE,&lt;/li&gt;
+  &lt;li&gt;временные файлы,&lt;/li&gt;
+  &lt;li&gt;файлы не относящиеся к проекту.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Чтобы скрыть какие-либо файлы из под бдительного ока СКВ, существует служебный файл .gitignore, в котором содержаться правила исключения.&lt;/p&gt;
+
+&lt;p&gt;Предлагаю вам свой образец файла .gitignore при работе с битриксом:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Пример &lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-gitignore&quot;&gt;# --- files ---
+.DS_Store
+Thumbs.db
+/nbproject/
+/.idea/
+/*.sublime-project
+/*.sublime-workspace
+
+# --- core ---
+/bitrix/*
+!/bitrix/components
+/bitrix/components/bitrix
+!/bitrix/modules
+/bitrix/modules/*
+!/bitrix/templates
+!/bitrix/php_interface
+/bitrix/php_interface/after_connect.php
+/bitrix/php_interface/after_connect_d7.php
+/bitrix/php_interface/dbconn.php
+!/bitrix/admin/
+/bitrix/admin/*
+
+# --- project modules ---
+!/bitrix/modules/project*
+
+# --- project admin scripts ---
+# any project pages
+!/bitrix/admin/project*
+# 1c exchange custom script
+!/bitrix/admin/1c_exchange_custom.php
+
+# --- media files ---
+/upload
+/video
+/files
+/i
+
+# --- log files ---
+/_logs/
+*.log
+log.txt
+
+# --- archives ---
+*.tar*
+*.zip*
+*.rar*
+
+# --- mysql files ---
+/*.sql
+
+# --- other ---
+*.tmp
+/_*
+/test/
+/t.php
+test.php
+robots.txt
+sitemap*.xml
+/*.txt
+web.config
+.htaccess.restore
+*old*
+*/*cache*/
+
+cgi-bin/
+google*.html
+mywot*.html
+wmail*.html
+yandex*.html
+php.ini
+
+restore.php
+bitrix_server_test.php
+bitrixsetup.php
+
+phpMyAdmin
+pma
+adminer.php
+adminer.css
+
+bx_1c_import.php
+bx_1c_import_lite.php
+/webstat
+
+# allows fast hide any files or folders from under git's eyes
+*_gitignore_*
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;8-Завершайте-проект&quot;&gt;8. Завершайте проект&lt;/h2&gt;
+
+&lt;p&gt;Завершайте работу над проектом грамотно.&lt;/p&gt;
+
+&lt;p&gt;Чтобы избежать случайных ошибок и проблем:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;пройдите еще раз “&lt;noindex&gt;&lt;a href=&quot;https://dev.1c-bitrix.ru/learning/course/?COURSE_ID=35&amp;amp;LESSON_ID=2024&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Проверку системы&lt;/a&gt;&lt;/noindex&gt;”,&lt;/li&gt;
+  &lt;li&gt;сдайте проект по “&lt;noindex&gt;&lt;a href=&quot;https://dev.1c-bitrix.ru/learning/course/?COURSE_ID=43&amp;amp;CHAPTER_ID=04830&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Монитору качества&lt;/a&gt;&lt;/noindex&gt;”,&lt;/li&gt;
+  &lt;li&gt;настройте &lt;noindex&gt;&lt;a href=&quot;https://dev.1c-bitrix.ru/learning/course/?COURSE_ID=35&amp;amp;LESSON_ID=4464&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;автоматическое резервное копирование&lt;/a&gt;&lt;/noindex&gt;,&lt;/li&gt;
+  &lt;li&gt;настройте логи.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;Настройка-логов&quot;&gt;Настройка логов&lt;/h3&gt;
+
+&lt;p&gt;Имея под рукой логи проще разобраться с возникшими проблемами и выяснить, когда и почему они начались.&lt;/p&gt;
+
+&lt;p&gt;Речь о логах функции &lt;code class=&quot;highlighter-rouge&quot;&gt;AddMessage2Log(...)&lt;/code&gt; и секции &lt;code class=&quot;highlighter-rouge&quot;&gt;exception_handling&lt;/code&gt; из файла &lt;code class=&quot;highlighter-rouge&quot;&gt;.settings.php&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Чтобы в логах было удобнее ориентироваться — можно группировать их по датам. Формат даты “&lt;code class=&quot;highlighter-rouge&quot;&gt;Y_m_d&lt;/code&gt;” — позволит файлам автоматически сортироваться в хронологическом порядке.&lt;/p&gt;
+
+&lt;p&gt;Все логи удобно держать в одном месте, например в папке &lt;code class=&quot;highlighter-rouge&quot;&gt;/_logs/bx/&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;В целях защиты следует закрыть доступ к папке с логами по &lt;code class=&quot;highlighter-rouge&quot;&gt;http&lt;/code&gt; — настраивается в &lt;code class=&quot;highlighter-rouge&quot;&gt;.htacces&lt;/code&gt;, и/или добавить к названию файла уникальный для проекта постфикс.&lt;/p&gt;
+
+&lt;p&gt;Папку для логов надо предварительно создать и убедиться, что битрикс (веб-сервер) имеет права на запись в нее.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Пример настройки логов для функции &lt;code class=&quot;highlighter-rouge&quot;&gt;AddMessage2Log&lt;/code&gt;:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;define&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;LOG_FILENAME&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_SERVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;DOCUMENT_ROOT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/_logs/bx/&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Y_m_d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;_PROJECT_UNIQUE_POSTFIX.log&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Пример настройки логов для секции &lt;code class=&quot;highlighter-rouge&quot;&gt;exception_handling&lt;/code&gt;:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s1&quot;&gt;'exception_handling'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'value'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;'debug'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// disables error output to screen&lt;/span&gt;
+       &lt;span class=&quot;c1&quot;&gt;// ошибки для вывода в лог&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;'handled_errors_types'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;E_ALL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;E_NOTICE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;E_STRICT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;E_WARNING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;'exception_errors_types'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;E_ALL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;E_NOTICE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;E_WARNING&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;E_STRICT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;E_COMPILE_WARNING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;'ignore_silence'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;'assertion_throws_exception'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;'assertion_error_type'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;256&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+          &lt;span class=&quot;s1&quot;&gt;'settings'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+              &lt;span class=&quot;s1&quot;&gt;'file'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;_logs/bx_error/&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Y_m_d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;_PROJECT_UNIQUE_POSTFIX.log&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+              &lt;span class=&quot;s1&quot;&gt;'log_size'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ~ 1Mb per file&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'readonly'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;Подведем-итоги&quot;&gt;Подведем итоги&lt;/h2&gt;
+
+&lt;p&gt;Я постарался собрать основные правила хорошего тона, о которых следует знать начинающим разработчикам, и не забывать опытным. Я уверен, что соблюдение этих правил поднимет качество, как при повседневной работе проекта, так и при его модернизации.&lt;/p&gt;
+
+&lt;p&gt;Надеюсь теперь сайтов на битриксе, которые будут сделаны “хорошо”, будут работать быстро и легко поддерживаться станет больше.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 14 Dec 2017 12:00:00 +0300</pubDate>
+        <link>https://blog.itsail.ru/blog/8-rules-of-good-manners-bitrix-for-beginners/</link>
+        <guid isPermaLink="true">https://blog.itsail.ru/blog/8-rules-of-good-manners-bitrix-for-beginners/</guid>
+        
+        <category>Разработка</category>
+        
+        <category>Битрикс</category>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Спецсимволы HTML</title>
+        <description>&lt;p&gt;&lt;strong&gt;Спецсимволы HTML&lt;/strong&gt;, или символы-мнемоники, представляют собой конструкцию SGML (англ. &lt;strong&gt;Standard Generalized Markup Language&lt;/strong&gt; — стандартный обобщённый язык разметки), ссылающуюся на определенные символы из символьного набора документа. В основном они используются для указания символов, которых нет в стандартной компьютерной клавиатуре, либо которые не поддерживает кодировка HTML-страницы (Windows-1251, UTF-8 и т.д.).&lt;/p&gt;
+
+&lt;p&gt;Чтобы разместить символ на веб-странице, необходимо указать HTML-код или мнемонику.&lt;/p&gt;
+
+&lt;p&gt;Спецсимволы чувствительны к регистру, поэтому их необходимо прописывать точно так, как указано в таблице. Спецсимволы, не имеющие мнемоники, могут не отображаться вовсе или же некорректно отображаться в тех или иных браузерах.&lt;/p&gt;
+
+&lt;p&gt;Для вставки символов внутрь тегов воспользуйтесь HTML-кодом символа, а для использования символов в таблицах стилей, например, в качестве значения свойства &lt;code class=&quot;highlighter-rouge&quot;&gt;content&lt;/code&gt; — CSS-код.&lt;/p&gt;
+
+&lt;p&gt;Спецсимвол наследует &lt;strong&gt;цвет&lt;/strong&gt; от цвета текста родительского элемента. Чтобы изменить цвет спецсимвола, можно поместить HTML-код внутрь тега &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;span&amp;gt;&lt;/code&gt; или задать нужное значение свойства &lt;code class=&quot;highlighter-rouge&quot;&gt;color&lt;/code&gt; (при вставке спецсимволов через свойство &lt;code class=&quot;highlighter-rouge&quot;&gt;content&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Содержание:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#Полезные-знаки-и-символы&quot;&gt;Полезные знаки и символы&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#Знаки-пунктуации&quot;&gt;Знаки пунктуации&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#Стрелки&quot;&gt;Стрелки&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#Карточные-масти&quot;&gt;Карточные масти&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#Деньги&quot;&gt;Деньги&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#Знаки-зодиака&quot;&gt;Знаки зодиака&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;Полезные-знаки-и-символы&quot;&gt;Полезные знаки и символы&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Вид&lt;/th&gt;
+      &lt;th&gt;HTML-код&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;CSS-код&lt;/th&gt;
+      &lt;th&gt;Описание&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☃&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9731;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2603&lt;/td&gt;
+      &lt;td&gt;Снеговик&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☦&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9766;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2626&lt;/td&gt;
+      &lt;td&gt;Православный крест&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⚓&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9875;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2693&lt;/td&gt;
+      &lt;td&gt;Якорь&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✆&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9990;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2706&lt;/td&gt;
+      &lt;td&gt;Знак телефона&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☎&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9742;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\260E&lt;/td&gt;
+      &lt;td&gt;Телефон&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☕&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9749;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2615&lt;/td&gt;
+      &lt;td&gt;Горячие напитки&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✎&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9998;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\270E&lt;/td&gt;
+      &lt;td&gt;Карандаш, направленный вправо-вниз&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✏&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9999;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\270F&lt;/td&gt;
+      &lt;td&gt;Карандаш&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✐&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10000;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2710&lt;/td&gt;
+      &lt;td&gt;Карандаш, направленный вправо-вверх&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10001;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2711&lt;/td&gt;
+      &lt;td&gt;Незакрашенное острие пера&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✒&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10002;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2712&lt;/td&gt;
+      &lt;td&gt;Закрашенное острие пера&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⚜&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9884;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\269C&lt;/td&gt;
+      &lt;td&gt;Геральдическая лилия&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⛑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9937;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\26D1&lt;/td&gt;
+      &lt;td&gt;Шлем с белым крестом&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⚝&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9885;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\269D&lt;/td&gt;
+      &lt;td&gt;Начерченная белая звезда&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❄&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10052;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2744&lt;/td&gt;
+      &lt;td&gt;Снежинка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❤&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10084;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2764&lt;/td&gt;
+      &lt;td&gt;Закрашенное жирное сердце&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❅&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10053;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2745&lt;/td&gt;
+      &lt;td&gt;Зажатая трилистниками снежинка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❆&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10054;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2746&lt;/td&gt;
+      &lt;td&gt;Жирная остроугольная снежинка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;★&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9733;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2605&lt;/td&gt;
+      &lt;td&gt;Закрашенная звезда&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☆&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9734;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2606&lt;/td&gt;
+      &lt;td&gt;Незакрашенная звезда&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✪&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10026;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\272A&lt;/td&gt;
+      &lt;td&gt;Незакрашенная звезда в закрашенном круге&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✫&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10027;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\272B&lt;/td&gt;
+      &lt;td&gt;Закрашенная звезда с незакрашенным кругом внутри&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✯&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10031;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\272F&lt;/td&gt;
+      &lt;td&gt;Вращающаяся звезда&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❉&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10057;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2749&lt;/td&gt;
+      &lt;td&gt;Звёздочка с шарообразными окончаниями&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❋&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10059;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\274B&lt;/td&gt;
+      &lt;td&gt;Жирная восьмиконечная каплеобразная звёздочка-пропеллер&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✲&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10034;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2732&lt;/td&gt;
+      &lt;td&gt;Звёздочка с незакрашенным центром&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☀&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9728;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2600&lt;/td&gt;
+      &lt;td&gt;Закрашенное солнце с лучами&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☁&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9729;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2601&lt;/td&gt;
+      &lt;td&gt;Облака&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☂&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9730;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2602&lt;/td&gt;
+      &lt;td&gt;Зонтик&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9745;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2611&lt;/td&gt;
+      &lt;td&gt;Галочка в квадрате&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☒&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9746;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2612&lt;/td&gt;
+      &lt;td&gt;Крестик в квадрате&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☹&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9785;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2639&lt;/td&gt;
+      &lt;td&gt;Нахмуренный смайлик&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☺&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9786;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\263A&lt;/td&gt;
+      &lt;td&gt;Улыбающийся смайлик&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☻&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9787;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\263B&lt;/td&gt;
+      &lt;td&gt;Закрашенный улыбающийся смайлик&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☭&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9773;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\262D&lt;/td&gt;
+      &lt;td&gt;Серп и молот&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⚑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9873;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2691&lt;/td&gt;
+      &lt;td&gt;Закрашенный флаг&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⚐&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9872;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2690&lt;/td&gt;
+      &lt;td&gt;Незакрашенный флаг&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;☰&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9776;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2630&lt;/td&gt;
+      &lt;td&gt;Триграмма&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✿&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10047;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\273f&lt;/td&gt;
+      &lt;td&gt;Закрашенный цветок&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❀&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10048;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2740&lt;/td&gt;
+      &lt;td&gt;Незакрашенный цветок&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✾&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10046;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\273E&lt;/td&gt;
+      &lt;td&gt;Цветок с шестью лепестками&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❁&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10049;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2741&lt;/td&gt;
+      &lt;td&gt;Закрашенный обведённый цветок&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❂&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10050;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2742&lt;/td&gt;
+      &lt;td&gt;Цветок из точек&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✉&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9993;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2709&lt;/td&gt;
+      &lt;td&gt;Конверт&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❦&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10086;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2766&lt;/td&gt;
+      &lt;td&gt;Сердце в виде цветка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❶&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10102;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2776&lt;/td&gt;
+      &lt;td&gt;Номер 1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❷&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10103;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2777&lt;/td&gt;
+      &lt;td&gt;Номер 2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❸&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10104;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2778&lt;/td&gt;
+      &lt;td&gt;Номер 3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❹&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10105;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2779&lt;/td&gt;
+      &lt;td&gt;Номер 4&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❺&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10106;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\277A&lt;/td&gt;
+      &lt;td&gt;Номер 5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❻&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10107;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\277B&lt;/td&gt;
+      &lt;td&gt;Номер 6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❼&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10108;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\277C&lt;/td&gt;
+      &lt;td&gt;Номер 7&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❽&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10109;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\277D&lt;/td&gt;
+      &lt;td&gt;Номер 8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➒&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10130;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2792&lt;/td&gt;
+      &lt;td&gt;Номер 9&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➓&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10131;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2793&lt;/td&gt;
+      &lt;td&gt;Номер 10&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✖&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10006;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2716&lt;/td&gt;
+      &lt;td&gt;Жирный знак умножения&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✘&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10008;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2718&lt;/td&gt;
+      &lt;td&gt;Жирный крестик&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✔&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10004;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2714&lt;/td&gt;
+      &lt;td&gt;Жирная отметка галочкой&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;✚&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10010;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\271A&lt;/td&gt;
+      &lt;td&gt;Жирный крест&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⚛&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9883;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\269B&lt;/td&gt;
+      &lt;td&gt;Символ атома&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♺&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9850;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\267A&lt;/td&gt;
+      &lt;td&gt;Символ переработки&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10065;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2751&lt;/td&gt;
+      &lt;td&gt;Незакрашенный квадрат с правой нижней тенью&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❒&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10066;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2752&lt;/td&gt;
+      &lt;td&gt;Незакрашенный квадрат с правой верхней тенью&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;◈&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9672;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\25C8&lt;/td&gt;
+      &lt;td&gt;Алмаз в оправе&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;◐&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9680;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\25D0&lt;/td&gt;
+      &lt;td&gt;Круг с левой закрашенной половиной&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;◑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9681;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\25D1&lt;/td&gt;
+      &lt;td&gt;Круг с закрашенной правой половиной&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⁂&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8258;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2042&lt;/td&gt;
+      &lt;td&gt;Три звездочки&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;Знаки-пунктуации&quot;&gt;Знаки пунктуации&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Вид&lt;/th&gt;
+      &lt;th&gt;HTML-код&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;CSS-код&lt;/th&gt;
+      &lt;th&gt;Описание&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;nbsp;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00A0&lt;/td&gt;
+      &lt;td&gt;Неразрывный пробел&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;­&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;shy;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00AD&lt;/td&gt;
+      &lt;td&gt;Место возможного переноса&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&amp;lt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lt;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\003C&lt;/td&gt;
+      &lt;td&gt;Знак “меньше чем” (начало тега)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&amp;gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;gt;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\003E&lt;/td&gt;
+      &lt;td&gt;Знак “больше чем” (конец тега)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;«&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;laquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00AB&lt;/td&gt;
+      &lt;td&gt;Левая двойная угловая скобка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;»&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;raquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00BB&lt;/td&gt;
+      &lt;td&gt;Правая двойная угловая скобка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;‹&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lsaquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2039&lt;/td&gt;
+      &lt;td&gt;Левая угловая одиночная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;›&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;rsaquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\203A&lt;/td&gt;
+      &lt;td&gt;Правая угловая одиночная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;”&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;quot;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\0022&lt;/td&gt;
+      &lt;td&gt;Двойная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;′&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;prime;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2032&lt;/td&gt;
+      &lt;td&gt;Одиночный штрих&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;″&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;Prime;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2033&lt;/td&gt;
+      &lt;td&gt;Двойной штрих&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;‘&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lsquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2018&lt;/td&gt;
+      &lt;td&gt;Левая одиночная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;’&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;rsquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2019&lt;/td&gt;
+      &lt;td&gt;Правая одиночная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;‚&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;sbquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\201A&lt;/td&gt;
+      &lt;td&gt;Нижняя одиночная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;“&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;ldquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\201C&lt;/td&gt;
+      &lt;td&gt;Левая двойная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;”&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;rdquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\201D&lt;/td&gt;
+      &lt;td&gt;Правая двойная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;„&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;bdquo;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\201E&lt;/td&gt;
+      &lt;td&gt;Нижняя двойная кавычка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❜&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10076;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\275C&lt;/td&gt;
+      &lt;td&gt;Жирная одинарная верхняя запятая&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;❛&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10075;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\275B&lt;/td&gt;
+      &lt;td&gt;Жирная одинарная повёрнутая верхняя запятая&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&amp;amp;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;amp;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\0026&lt;/td&gt;
+      &lt;td&gt;Амперсанд&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;’&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;apos;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\0027&lt;/td&gt;
+      &lt;td&gt;Апостроф (одинарная кавычка)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;§&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;sect;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00A7&lt;/td&gt;
+      &lt;td&gt;Параграф&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;©&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;copy;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00A9&lt;/td&gt;
+      &lt;td&gt;Знак copyright&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¬&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;not;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00AC&lt;/td&gt;
+      &lt;td&gt;Знак отрицания&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;®&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;reg;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00AE&lt;/td&gt;
+      &lt;td&gt;Знак зарегистрированной торговой марки&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¯&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;macr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00AF&lt;/td&gt;
+      &lt;td&gt;Знак долготы над гласным&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;°&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;deg;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B0&lt;/td&gt;
+      &lt;td&gt;Градус&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;±&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;plusmn;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B1&lt;/td&gt;
+      &lt;td&gt;Плюс-минус&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¹&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;sup1;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B9&lt;/td&gt;
+      &lt;td&gt;Верхний индекс “1”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;²&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;sup2;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B2&lt;/td&gt;
+      &lt;td&gt;Верхний индекс “2”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;³&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;sup3;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B3&lt;/td&gt;
+      &lt;td&gt;Верхний индекс “3”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¼&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;frac14;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00BC&lt;/td&gt;
+      &lt;td&gt;Одна четверть&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;½&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;frac12;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00BD&lt;/td&gt;
+      &lt;td&gt;Одна вторая&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¾&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;frac34;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00BE&lt;/td&gt;
+      &lt;td&gt;Три четверти&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;´&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;acute;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B4&lt;/td&gt;
+      &lt;td&gt;Знак ударения&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;µ&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;micro;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B5&lt;/td&gt;
+      &lt;td&gt;Микро&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¶&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;para;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B6&lt;/td&gt;
+      &lt;td&gt;Знак абзаца&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;·&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;middot;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00B7&lt;/td&gt;
+      &lt;td&gt;Знак умножения&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¿&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;iquest;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00BF&lt;/td&gt;
+      &lt;td&gt;Перевернутый вопросительный знак&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;ƒ&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;fnof;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\0192&lt;/td&gt;
+      &lt;td&gt;Знак флорина&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;™&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;trade;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2122&lt;/td&gt;
+      &lt;td&gt;Знак торговой марки&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;•&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;bull;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2022&lt;/td&gt;
+      &lt;td&gt;Маркер списка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;…&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;hellip;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2026&lt;/td&gt;
+      &lt;td&gt;Многоточие&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;‾&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;oline;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\203E&lt;/td&gt;
+      &lt;td&gt;Надчеркивание&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;–&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;ndash;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2013&lt;/td&gt;
+      &lt;td&gt;Среднее тире&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;—&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;mdash;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2014&lt;/td&gt;
+      &lt;td&gt;Длинное тире&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;‰&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;permil;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2030&lt;/td&gt;
+      &lt;td&gt;Промилле&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;}&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#125;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\007D&lt;/td&gt;
+      &lt;td&gt;Правая фигурная скобка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;{&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#123;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\007B&lt;/td&gt;
+      &lt;td&gt;Левая фигурная скобка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;=&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#61;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\003D&lt;/td&gt;
+      &lt;td&gt;Знак равенства&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;≠&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;ne;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2260&lt;/td&gt;
+      &lt;td&gt;Знак неравенства&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;≅&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;cong;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2245&lt;/td&gt;
+      &lt;td&gt;Конгруэнтность (геометрическое равенство)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;≈&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;asymp;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2248&lt;/td&gt;
+      &lt;td&gt;Почти равно&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;≤&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;le;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2264&lt;/td&gt;
+      &lt;td&gt;Меньше чем или равно&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;≥&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;ge;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2265&lt;/td&gt;
+      &lt;td&gt;Больше чем или равно&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;∠&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;ang;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2220&lt;/td&gt;
+      &lt;td&gt;Угол&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⊥&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;perp;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\22A5&lt;/td&gt;
+      &lt;td&gt;Перпендикулярно (кнопка вверх)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;radic;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\221A&lt;/td&gt;
+      &lt;td&gt;Квадратный корень&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;∑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;sum;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2211&lt;/td&gt;
+      &lt;td&gt;N-ичное суммирование&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;∫&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;int;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\222B&lt;/td&gt;
+      &lt;td&gt;Интеграл&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;※&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8251;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\203B&lt;/td&gt;
+      &lt;td&gt;Знак сноски&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;÷&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;divide;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00F7&lt;/td&gt;
+      &lt;td&gt;Знак деления&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;∞&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;infin;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\221E&lt;/td&gt;
+      &lt;td&gt;Знак бесконечности&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;@&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#64;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\0040&lt;/td&gt;
+      &lt;td&gt;Символ собака&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;[&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#91;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\005B&lt;/td&gt;
+      &lt;td&gt;Левая квадратная скобка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;]&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#93;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\005D&lt;/td&gt;
+      &lt;td&gt;Правая квадратная скобка&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;Стрелки&quot;&gt;Стрелки&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Вид&lt;/th&gt;
+      &lt;th&gt;HTML-код&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;CSS-код&lt;/th&gt;
+      &lt;th&gt;Описание&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;←&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;larr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2190&lt;/td&gt;
+      &lt;td&gt;Стрелка влево&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;↑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;uarr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2191&lt;/td&gt;
+      &lt;td&gt;Стрелка вверх&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;→&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;rarr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2192&lt;/td&gt;
+      &lt;td&gt;Стрелка вправо&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;↓&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;darr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2193&lt;/td&gt;
+      &lt;td&gt;Стрелка вниз&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;↔&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;harr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2194&lt;/td&gt;
+      &lt;td&gt;Стрелка влево-вправо&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;↵&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;crarr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21B5&lt;/td&gt;
+      &lt;td&gt;Стрелка вниз и влево – знак возврата каретки&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⇐&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lArr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21D0&lt;/td&gt;
+      &lt;td&gt;Двойная стрелка налево&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⇑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;uArr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21D1&lt;/td&gt;
+      &lt;td&gt;Двойная стрелка вверх&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⇒&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;rArr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21D2&lt;/td&gt;
+      &lt;td&gt;Двойная стрелка направо&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⇓&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;dArr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21D3&lt;/td&gt;
+      &lt;td&gt;Двойная стрелка вниз&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⇔&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;hArr;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21D4&lt;/td&gt;
+      &lt;td&gt;Двойная стрелка влево-вправо&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➠&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10144;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\27A0&lt;/td&gt;
+      &lt;td&gt;Летящая стрела&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➤&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10148;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\27A4&lt;/td&gt;
+      &lt;td&gt;Наконечник стрелы&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➥&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10149;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\27A5&lt;/td&gt;
+      &lt;td&gt;Изогнутая стрела, указывающая вниз и вправо&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➦&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10150;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\27A6&lt;/td&gt;
+      &lt;td&gt;Изогнутая стрела, указывающая вверх и вправо&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➳&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10163;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\27B3&lt;/td&gt;
+      &lt;td&gt;Стрела направо&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;↺&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8634;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21BA&lt;/td&gt;
+      &lt;td&gt;Круглая стрелка с наконечником против часовой стрелки&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;↻&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8635;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21BB&lt;/td&gt;
+      &lt;td&gt;Круглая стрелка с наконечником по часовой стрелке&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⇧&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8679;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21E7&lt;/td&gt;
+      &lt;td&gt;Толстая полая стрелка вверх&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;↩&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8617;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\21A9&lt;/td&gt;
+      &lt;td&gt;Стрелка налево с крючком&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;➫&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#10155;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\27AB&lt;/td&gt;
+      &lt;td&gt;Наклонённая вниз объёмная стрелка&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⬇&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#11015;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2B07&lt;/td&gt;
+      &lt;td&gt;Закрашенная стрелка вниз&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;⬆&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#11014;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2B06&lt;/td&gt;
+      &lt;td&gt;Закрашенная стрелка вверх&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;Карточные-масти&quot;&gt;Карточные масти&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Вид&lt;/th&gt;
+      &lt;th&gt;HTML-код&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;CSS-код&lt;/th&gt;
+      &lt;th&gt;Описание&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♠&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;spades;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2660&lt;/td&gt;
+      &lt;td&gt;“Пики”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♣&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;clubs;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2663&lt;/td&gt;
+      &lt;td&gt;“Трефы”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♥&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;hearts;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2665&lt;/td&gt;
+      &lt;td&gt;“Червы”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♦&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;diams;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2666&lt;/td&gt;
+      &lt;td&gt;“Бубны”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♡&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9825;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2661&lt;/td&gt;
+      &lt;td&gt;Контур “Червы”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♢&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9826;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2662&lt;/td&gt;
+      &lt;td&gt;Контур “Бубны”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♤&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9828;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2664&lt;/td&gt;
+      &lt;td&gt;Контур “Пики”&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♧&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9831;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2667&lt;/td&gt;
+      &lt;td&gt;Контур “Трефы”&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;Деньги&quot;&gt;Деньги&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Вид&lt;/th&gt;
+      &lt;th&gt;HTML-код&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;CSS-код&lt;/th&gt;
+      &lt;th&gt;Описание&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¢&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;cent;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\FFE0&lt;/td&gt;
+      &lt;td&gt;Цент&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;£&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;pound;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\FFE1&lt;/td&gt;
+      &lt;td&gt;Фунт стерлингов&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;₽&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8381;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\20BD&lt;/td&gt;
+      &lt;td&gt;Российский рубль&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;¥&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;yen;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\00A5&lt;/td&gt;
+      &lt;td&gt;Йена или юань&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;€&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;euro;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\20AC&lt;/td&gt;
+      &lt;td&gt;Евро&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;$&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#36;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\0024&lt;/td&gt;
+      &lt;td&gt;Доллар&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;₴&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8372;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\20B4&lt;/td&gt;
+      &lt;td&gt;Знак гривны&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;₹&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8377;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\20B9&lt;/td&gt;
+      &lt;td&gt;Индийская рупия&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;圓&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#22291;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\5713&lt;/td&gt;
+      &lt;td&gt;Китайский юань&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;₸&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#8376;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\20B8&lt;/td&gt;
+      &lt;td&gt;Казахстанский тенге&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;Знаки-зодиака&quot;&gt;Знаки зодиака&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Вид&lt;/th&gt;
+      &lt;th&gt;HTML-код&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;CSS-код&lt;/th&gt;
+      &lt;th&gt;Описание&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♈&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9800;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2648&lt;/td&gt;
+      &lt;td&gt;Овен&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♉&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9801;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2649&lt;/td&gt;
+      &lt;td&gt;Телец&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♊&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9802;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\264A&lt;/td&gt;
+      &lt;td&gt;Близнецы&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♋&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9803;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\264B&lt;/td&gt;
+      &lt;td&gt;Рак&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♌&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9804;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\264C&lt;/td&gt;
+      &lt;td&gt;Лев&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♍&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9805;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\264D&lt;/td&gt;
+      &lt;td&gt;Дева&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♎&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9806;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\264E&lt;/td&gt;
+      &lt;td&gt;Весы&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♏&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9807;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\264F&lt;/td&gt;
+      &lt;td&gt;Скорпион&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♐&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9808;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2650&lt;/td&gt;
+      &lt;td&gt;Стрелец&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♑&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9809;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2651&lt;/td&gt;
+      &lt;td&gt;Козерог&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♒&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9810;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2652&lt;/td&gt;
+      &lt;td&gt;Водолей&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;♓&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;#9811;&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;\2653&lt;/td&gt;
+      &lt;td&gt;Рыбы&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+        <pubDate>Tue, 12 Dec 2017 12:00:00 +0300</pubDate>
+        <link>https://blog.itsail.ru/blog/html-special-characters/</link>
+        <guid isPermaLink="true">https://blog.itsail.ru/blog/html-special-characters/</guid>
+        
+        <category>Разработка</category>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Черные методы продвижения сайтов. Что не стоит делать, если хотите вывести сайт в ТОП</title>
+        <description>&lt;p&gt;Задача владельцев сайтов — поднять свой ресурс на самое высокое место в поисковой выдаче. Они готовы сделать все, чтобы увидеть свой проект в ТОПе: кто-то применяет белые методы продвижения сайта, а кто-то не прочь воспользоваться и черным продвижением, лишь бы его детище было на вершине.&lt;/p&gt;
+
+&lt;p&gt;Поисковые системы уже давно научились распознавать недобросовестные манипуляции, разрабатывая новые алгоритмы. Они стараются избавиться от сайтов, которые продвигаются нечестным путем, и отдают предпочтение только качественным и грамотно оптимизированным ресурсам.&lt;/p&gt;
+
+&lt;h2 id=&quot;Черные-методы-раскрутки-которые-мыНЕ-рекомендуем&quot;&gt;Черные методы раскрутки, которые мы НЕ рекомендуем&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Спам.&lt;/strong&gt; Не пытайтесь упоминать о своем ресурсе везде, особенно там, где это не уместно. Информация о вашем сайте на форумах, в блогах, на досках объявлений, в рассылках должна быть по делу. Не стоит, например, размещать рекламу о сайте с кальянами на форуме молодых мам.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Обмен и покупка ссылок.&lt;/strong&gt; Начиная с 2013 года, Яндекс стал активно бороться с некачественными ссылками. Многие владельцы сайтов с большим количеством входящих ссылок столкнулись с Минусинском. Не занимайтесь покупкой ссылок, все ссылки должны быть с хороших ресурсов, тематически подходящих вашему. Помните, что для ссылочной массы сейчас важно не количество, а их качество.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Дорвеи и клоакинг.&lt;/strong&gt; Дорвей — сайт, созданный для перенаправления пользователя на продвигаемый ресурс. Для перенаправления используется redirect. Содержимое таких страниц состоит из бессвязных предложений с огромным количеством ключевых запросов. Такие сайты захламляют просторы Интернета и жестоко караются поисковыми системами.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Размещение невидимого или плохо заметного текста.&lt;/strong&gt; Размещение такого текста грозит получением фильтра от Яндекса, поисковики страницы со скрытым текстом исключают из поиска.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Накрутка поведенческих факторов.&lt;/strong&gt; Когда-то можно было повлиять на выдачу за счет накрутки ПФ, но сейчас поисковики умеют определять, был ли применен данный инструмент и все ли показатели естественные. Не заказывайте накрутку поведенческих факторов у посредников, ни к чему хорошему это не приведет.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Переспам текста ключевыми запросами.&lt;/strong&gt; Все чаще владельцы сайтов сталкиваются с фильтром Баден-Баден, борющимся с текстовым спамом. Лайфхак от копирайтеров: на 300–500 символов рекомендуется использовать 1 ключевой запрос.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Много ссылок и кнопок на главной странице.&lt;/strong&gt; Допустимо, если в этом есть реальная необходимость.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Flash-анимация.&lt;/strong&gt; Такие сайты продвигать очень трудно. Найти их в ТОПе практически невозможно, но исключения бывают. Старайтесь не строить свой ресурс полностью на flash-элементах.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Каждый владелец веб-сайта должен поставить перед собой задачу не просто раскрутить свой проект, а сделать его интересным и удобным для пользователей. Сайты создаются в первую очередь для людей, а поисковые системы всячески способствуют тому, чтобы ресурсы развивались и были качественными.&lt;/p&gt;
+
+&lt;h2 id=&quot;Несколько-советов-как-продвигать-сайт&quot;&gt;Несколько советов, как продвигать сайт&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Уделите внимание дизайну вашего сайта и удобству для посетителей.&lt;/strong&gt; Дизайн должен быть приятным, без ярких режущих глаз цветов. Делайте цветовую гамму размеренной, сочетайте шрифты. Создайте удобное меню, чтобы человек не ломал голову, где и что искать ему на сайте.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Грамотно оптимизируйте контент&lt;/strong&gt; (составьте семантическое ядро, оптимизируйте под него тексты, метатеги и пр.).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Настройте все технические параметры&lt;/strong&gt; (правильно подберите URL (лучше если ЧПУ будут с включением ключевых запросов), настройте файлы sitemap.xml и robots.txt для правильной индексации сайта, настройте редиректы для зеркал сайта, исключите все дубли, настройте разметку контактов и карточек товаров и т. д.).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Добавьте сайт в Вебмастера&lt;/strong&gt; Яндекса, Гугла, также нелишним будет добавление в Майле и Бинге.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Займитесь узнаваемостью сайта (компании) в сети.&lt;/strong&gt; Добавьте информацию о сайте на самые популярные площадки Интернета (Яндекс и Гугл Карты, справочники организаций (2ГИС, Фламп, Желтые страницы и др.)).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Займитесь наращиванием ссылочной массы,&lt;/strong&gt; но помните, что выше мы говорили о покупных и обменных ссылках. Еще один лайфхак: ссылки можно получать с помощью крауд-маркетинга, но делать это нужно правильно.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Разработайте мобильную версию сайта.&lt;/strong&gt; Пользователей из мобильных источников становится все больше и больше, сделайте свой ресурс удобным для просмотра на смартфонах и планшетах.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Используйте SMM-продвижение.&lt;/strong&gt; Продвижение в социальных сетях очень актуально в наше время. Большая ошибка — пренебрегать созданием групп в соцсетях и их продвижением.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Всегда помните о своем проекте.&lt;/strong&gt; Не забывайте вовремя оплачивать хостинг и домен. Если робот или пользователь зайдут на неработающий сайт из-за несвоевременной оплаты, это скажется только отрицательно. Также всегда старайтесь обновлять контент, особенно это важно для новостных ресурсов. Если на сайте есть новости, обновляйте их хотя бы раз в месяц, чтобы пользователь видел, что над ресурсом работают.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Данные рекомендации общие, каждый сайт имеет свою направленность. Сайт интернет-магазина и портал продвигаются разными способами, и план раскрутки для каждого будет свой.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 30 Oct 2017 21:15:00 +0300</pubDate>
+        <link>https://blog.itsail.ru/blog/black-methods-of-website-promotion/</link>
+        <guid isPermaLink="true">https://blog.itsail.ru/blog/black-methods-of-website-promotion/</guid>
+        
+        <category>Продвижение</category>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>[CLI] Работа с изображениями в линуксе</title>
+        <description>&lt;p&gt;В наше время всё чаще сайты сталкиваются с необходимостью введения отзывчивого дизайна и отзывчивых картинок – а в связи с этим есть необходимость эффективного изменения размера всех картинок. Система должна работать так, чтобы каждому пользователю по запросу отправлялась картинка нужного размера – маленькие для пользователей с небольшими экранами, большие – для больших экранов.&lt;/p&gt;
+
+&lt;p&gt;Веб таким образом работает отлично, но для доставки картинок разных размеров разным пользователям необходимо все эти картинки сначала создать.&lt;/p&gt;
+
+&lt;p&gt;Множество инструментов занимается изменением размера, но слишком часто они выдают большие файлы, аннулирующие выигрыш в быстродействии, который должен приходить вместе с отзывчивыми картинками. Давайте рассмотрим, как при помощи ImageMagick, инструмента командной строки, быстренько изменять размеры картинок, сохраняя превосходное качество и получая файлы небольших объёмов.&lt;/p&gt;
+
+&lt;h2 id=&quot;imagemagick-однострочники&quot;&gt;ImageMagick: однострочники&lt;/h2&gt;
+
+&lt;h3 id=&quot;Узнать-размеры-изображения&quot;&gt;Узнать размеры изображения&lt;/h3&gt;
+
+&lt;p&gt;По вертикали:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;identify &lt;span class=&quot;nt&quot;&gt;-ping&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-format&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%h&quot;&lt;/span&gt; IMG_4450.JPG&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;По горизонтали:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;identify &lt;span class=&quot;nt&quot;&gt;-ping&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-format&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;%w&quot;&lt;/span&gt; IMG_4450.JPG&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;Склейка-нескольких-картинок-в-один-файл&quot;&gt;Склейка нескольких картинок в один файл&lt;/h3&gt;
+
+&lt;p&gt;Склеить все изображения в директории в матрицу 2х2 по 4 изображения:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;montage &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.jpg &lt;span class=&quot;nt&quot;&gt;-tile&lt;/span&gt; 2x2 &lt;span class=&quot;nt&quot;&gt;-geometry&lt;/span&gt; +10+10 out.jpg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Склеить 2 изображения в столбец 1х2 (по вертикали):&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;montage BMW_420d.jpg BMW_425d.jpg &lt;span class=&quot;nt&quot;&gt;-tile&lt;/span&gt; 1x2 &lt;span class=&quot;nt&quot;&gt;-geometry&lt;/span&gt; +10+10 BMW_xDrive.jpg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Склеить 2 изображения в строку 2х1 (по горизонтали):&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;montage BMW_520d.jpg BMW_525d.jpg &lt;span class=&quot;nt&quot;&gt;-tile&lt;/span&gt; 2x1 &lt;span class=&quot;nt&quot;&gt;-geometry&lt;/span&gt; +10+10 BMW_M5.jpg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Подписать каждое изображение в коллаже именем файла:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;montage &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.jpg &lt;span class=&quot;nt&quot;&gt;-label&lt;/span&gt; %f &lt;span class=&quot;nt&quot;&gt;-frame&lt;/span&gt; 10 &lt;span class=&quot;nt&quot;&gt;-tile&lt;/span&gt; 2x2 &lt;span class=&quot;nt&quot;&gt;-geometry&lt;/span&gt; +10+10 out.jpg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;здесь:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-geometry +10+10&lt;/code&gt; — белые поля вокруг каждого изображения, заданные в пикселях&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-frame 10&lt;/code&gt; — 3D-рамка, пиксели&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-label %f&lt;/code&gt; — подпись&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;Рассово-верный-резайс-картинок&quot;&gt;Рассово-верный резайс картинок&lt;/h3&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert guy_fawkes.png &lt;span class=&quot;nt&quot;&gt;-adaptive-resize&lt;/span&gt; 500x guy_fawkes_500x.png
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Устаревший способ с ручным способом повышения чёткости картинки:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-filter&lt;/span&gt; Lanczos &lt;span class=&quot;nt&quot;&gt;-sharpen&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$sharp&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-quality&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$quality&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-resize&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$newsize&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-verbose&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;Растяжение-гистограммы-изображения-повышение-цветовой-чёткости&quot;&gt;Растяжение гистограммы изображения (повышение цветовой чёткости)&lt;/h3&gt;
+
+&lt;p&gt;Автоматический режим через normalize (также см. -auto-level и -auto-gamma):&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-normalize&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sharpen&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$sharp&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-quality&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$quality&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-resize&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$newsize&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ручное задание через linear-stretch на сколько % (в пикселях) снизу и сверху подвинуть гистограмму, можно задавать два числа в формате 5%x5%, также может использоваться с модификатором -channel:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-linear-stretch&lt;/span&gt; 7% &lt;span class=&quot;nt&quot;&gt;-quality&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$quality&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-resize&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$newsize&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;или через повышение контраста:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-contrast-stretch&lt;/span&gt; 5%x5% &lt;span class=&quot;nt&quot;&gt;-quality&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$quality&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-resize&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$newsize&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Тонкие подробности: https://www.imagemagick.org/Usage/color_mods/#stretching&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;Подмена-цвета&quot;&gt;Подмена цвета&lt;/h3&gt;
+
+&lt;p&gt;Если у нас есть, например, QR-код после онлайн-генератора, окрашенный в стандартный черный цвет, а мы хотим выкрасить его в один из корпоративных цветов (например, для вставки в CV или на визитку), сделать это можно следующей командой:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert create-qr-code.png &lt;span class=&quot;nt&quot;&gt;-fuzz&lt;/span&gt; 0% &lt;span class=&quot;nt&quot;&gt;-fill&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'#39а'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-opaque&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'#000'&lt;/span&gt; qr-code-kaspersky.png
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;здесь:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-opaque '#000'&lt;/code&gt; — какой цвет искать&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-fill '#39а'&lt;/code&gt; — на какой подменять&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-fuzz 0%&lt;/code&gt; — точность задания цвета (отклонение 0%, т.е. искать и подменять только точно совпадающий с #000 цветом)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Если у нас картинка в полутонах, то задаём выше допустимое отклонение:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert guy_fawkes.png &lt;span class=&quot;nt&quot;&gt;-fuzz&lt;/span&gt; 80% &lt;span class=&quot;nt&quot;&gt;-fill&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'#39а'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-opaque&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'#000'&lt;/span&gt; guy_fawkes_kaspersky.png
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;Посмотреть-список-доступных-шрифтов&quot;&gt;Посмотреть список доступных шрифтов&lt;/h3&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;convert &lt;span class=&quot;nt&quot;&gt;-list&lt;/span&gt; font | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;Font | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; имя_шрифта
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Именно выводимое название следует использовать для опции &lt;code class=&quot;highlighter-rouge&quot;&gt;-font&lt;/code&gt; команды &lt;code class=&quot;highlighter-rouge&quot;&gt;convert&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;Оптимизация-изображений&quot;&gt;Оптимизация изображений&lt;/h2&gt;
+
+&lt;h3 id=&quot;jpeg&quot;&gt;JPEG&lt;/h3&gt;
+
+&lt;p&gt;Установка &lt;code class=&quot;highlighter-rouge&quot;&gt;jpegtran&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;yum search jpegtran
+libjpeg-turbo-utils.x86_64 : Utilities &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;manipulating JPEG images
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; libjpeg-turbo-utils
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Использование:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jpegtran &lt;span class=&quot;nt&quot;&gt;-copy&lt;/span&gt; none &lt;span class=&quot;nt&quot;&gt;-optimize&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-outfile&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file_out&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file_in&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Второй доступный инструмент — &lt;code class=&quot;highlighter-rouge&quot;&gt;jpegoptim&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; jpegoptim
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Использование:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jpegoptim &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--strip-all&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--stdout&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file_out&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;С данными настройками оба тула дают идентичный размер выходных файлов.&lt;/p&gt;
+
+&lt;p&gt;Для размещения файлов в сети желательно использовать опцию progressive, например, для &lt;code class=&quot;highlighter-rouge&quot;&gt;jpegoptim&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jpegoptim &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--strip-all&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--all-progressive&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--stdout&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file_out&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;png&quot;&gt;PNG&lt;/h3&gt;
+
+&lt;p&gt;Что доступно в репах:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;advancecomp.x86_64 : Recompression utilities &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; .PNG, .MNG and .ZIP files
+optipng.x86_64     : PNG optimizer and converter
+pngcrush.x86_64    : Optimizer &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;PNG &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Portable Network Graphics&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; files
+pngnq.x86_64       : Pngnq is a tool &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;quantizing PNG images &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;RGBA format
+pngquant.x86_64    : PNG quantization tool &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;reducing image file size
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Устанавливаем:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; optipng advancecomp pngcrush pngnq pngquant
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Жмём:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;optipng &lt;span class=&quot;nt&quot;&gt;-o7&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-out&lt;/span&gt; automotive_logofeature-optipng.png automotive_logofeature.png
+advpng &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-4&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 50 automotive_logofeature-advpng.png
+advdef &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-4&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 50 automotive_logofeature-advdef.png
+pngcrush &lt;span class=&quot;nt&quot;&gt;-brute&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-reduce&lt;/span&gt; automotive_logofeature.png automotive_logofeature-pngcrush.png
+pngnq &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; automotive_logofeature-pngnq.png
+pngquant &lt;span class=&quot;nt&quot;&gt;--speed&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt; automotive_logofeature-pngquant.png
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Результаты:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;58019 байт  -  automotive_logofeature-оригинал.png
+55449 байт  -  automotive_logofeature-optipng.png
+53224 байт  -  automotive_logofeature-advdef.png
+52086 байт  -  automotive_logofeature-pngcrush.png
+38080 байт  -  automotive_logofeature-advpng.png
+30961 байт  -  automotive_logofeature-pngquant.png
+15796 байт  -  automotive_logofeature-pngnq.png
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Тройка лидеров:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;pngnq&lt;/strong&gt; (ужал ~4 раза)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;pngquant&lt;/strong&gt; (ужал ~2 раза)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;advpng&lt;/strong&gt; (ужал ~1.5 раза)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Однако всплыло одно но: &lt;code class=&quot;highlighter-rouge&quot;&gt;advpng&lt;/code&gt; умеет оптимизировать изображения, которые по какой-то причине не ужимают ни &lt;code class=&quot;highlighter-rouge&quot;&gt;pngnq&lt;/code&gt;, ни &lt;code class=&quot;highlighter-rouge&quot;&gt;pngquant&lt;/code&gt;: Google PageSpeed перестал жаловаться только после дополнительного прохода по файлам утилитой &lt;code class=&quot;highlighter-rouge&quot;&gt;advpng&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;svg&quot;&gt;SVG&lt;/h3&gt;
+
+&lt;h4 id=&quot;batik-svgpp&quot;&gt;batik-svgpp&lt;/h4&gt;
+
+&lt;p&gt;Batik SVG pretty printer — The SVG Pretty Printer lets developers «pretty-up» their SVG files and get their tabulations and other cosmetic parameters in order. It can also be used to modify the DOCTYPE declaration on SVG files&lt;/p&gt;
+
+&lt;h4 id=&quot;svgcleaner&quot;&gt;svgcleaner&lt;/h4&gt;
+
+&lt;p&gt;Пакетная очистка SVG-файлов от ненужной информации, утилита удаляет атрибуты, не участвующие в формировании конечного изображения, а задействованные атрибуты приводит к более компактному виду. Размер файла может быть уменьшен на 60%.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Поскольку удаляется информация и в выключеных/скрытых слоях, то утилиту стоит рассматривать как инструмент подготовки &lt;code class=&quot;highlighter-rouge&quot;&gt;publishing svg-files&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Зависимости:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;libxcb-xinerama0&lt;/li&gt;
+  &lt;li&gt;p7zip&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; p7zip libXinerama libXinerama-devel
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Запуск:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./svgcleaner input.svg output.svg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Mon, 09 Jan 2017 00:44:35 +0300</pubDate>
+        <link>https://blog.itsail.ru/blog/cli-working-with-images-in-linux/</link>
+        <guid isPermaLink="true">https://blog.itsail.ru/blog/cli-working-with-images-in-linux/</guid>
+        
+        <category>Линукс</category>
+        
+        <category>Разработка</category>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Дизайнь как верстальщик</title>
+        <description>&lt;p&gt;Ваш дизайнер – настоящий гений и его продукт идеален. Он доблестен в неравной борьбе с ТЗ и всегда выходит победителем. Но уже пятый по счету верстальщик, матерясь, делает из его макетов какую-то гадость? Не торопитесь искать шестого. Чаще всего причина легко устранима – достаточно лишь поведать вашему гению о нескольких приземленных правилах и попросить его им следовать.&lt;/p&gt;
+
+&lt;p&gt;В этой статье я попробовал собрать некоторые рекомендации для дизайнеров, делающих мир чуть светлее. Спросите у верстальщика о его проблемах, отправьте эту статью дизайнеру. Ибо совершенству нет предела.&lt;/p&gt;
+
+&lt;p&gt;Проблема существовала всегда, сколько я себя помню айтишником. Когда проектирование интерфейсов было лишь красивым словосочетанием, смысл которого понимали только настоящие профи, дизайн отвечал минимум за две трети впечатления пользователя от сайта. Сейчас немного проще, UI-проектирование все чаще отделено от дизайна, хотя и делает его порой один и тот же человек. В любом случае, именно веб-дизайнер преобразует смутные образы или сухие прототипы в то, с чем потом взаимодействовать пользователю. И очень важно, чтобы верстальщик перенес этот дизайн в веб максимально точно. Желательно – вообще без изменений. Попиксельно. Спросите у любого дизайнера, насколько часто финальная верстка полностью его устраивает? Уверен, ответ будет печальным, если не резким.&lt;/p&gt;
+
+&lt;p&gt;О причинах этого говорить можно долго, но чаще всего винят верстальщика. Оно и понятно: дизайн есть, дизайн хороший, будь как дизайн. Но помимо простого копирования, на верстальщика ложится еще целый ворох обязанностей. Он должен сделать сайт адаптивным, быстрым, легким. Его верстка должна быть семантичной, изображения – пожатыми или векторными, а формы – заточенными под бэкенд. Да frontend-разработчик вообще много чего и кому должен, если он хороший (как дизайн). Вот и берет наш герой какой-нибудь фреймворк для ускорения и оптимизации работы – причем не важно, комбайн-бутстрадейшн или собственный велосипед, с гридами на флексбоксах. Открывает макеты и начинает ваять. И то тут, то там, ему приходится немного отступать от дизайна. Или раздувать таблицы стилей, делая их сложночитаемыми и неоправданно большими. Результат всегда не очень: дизайнер недоволен, фронтендер недоволен, в мире стало чуток темнее.&lt;/p&gt;
+
+&lt;p&gt;Но это только в том случае, если наш дизайнер, создавая макеты и передавая их дальше по цепочке, не учел несколько важных моментов, о которых я и собираюсь рассказать. Конечно, вряд ли я смогу здесь описать все, что мешает правильному взаимодействию дизайнера с верстальщиком. Да и проблемы, возникающие в этой связке, бывает, вообще никак не относятся к профессиональным качествам сторон. Но следование изложенным ниже рекомендациям точно не повредит ни проекту, ни его разработчикам.&lt;/p&gt;
+
+&lt;p&gt;Текст ниже — для дизайнера и, чуть-чуть, для фронтендщика. Итак, погнали.&lt;/p&gt;
+
+&lt;h2 id=&quot;Унифицируйте-элементы&quot;&gt;Унифицируйте элементы&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_01.jpg&quot; alt=&quot;Унифицируйте элементы :: Дизайнь как верстальщик&quot; title=&quot;Унифицируйте элементы :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Представим, что на сайте полсотни различных кнопок. От банальной «читать далее» до «произвести расчет стоимости лечения за первое полугодие». А есть еще круглые кнопки с иконками и кнопки-списки. И на каждой странице они немного отличаются: где-то кнопка на 5 пикселей шире остальных, где-то иконка переместилась в правую часть, где-то радиус углов немного разный… Выглядит, конечно, очень круто. И различия на дизайн-макетах даже не бросаются в глаза. Но на деле такое отношение к элементам оборачивается несколькими проблемами:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;верстать сложнее, дольше и дороже;&lt;/li&gt;
+  &lt;li&gt;возрастает вероятность, что верстальщик будет использовать на всем сайте только один из визуально почти одинаковых элементов;&lt;/li&gt;
+  &lt;li&gt;пользователю приходится каждый раз «привыкать» к новому виду элемента (хотя он и сам может этого не осознавать);&lt;/li&gt;
+  &lt;li&gt;при развитии проекта, скорее всего, получится чехарда из разномастных кнопок, инпутов и тд.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Решение простое. Дорогие дизайнеры, создайте единый документ, в который поместите все-все типовые элементы. Заголовки, списки, параграфы, ссылки, кнопки, поля форм, контролы, миниатюры изображений и прочее. Такую доку называют «UI Style Guide» или «Frontend Style Guide» — кто как привык. Обычно это просто послойный исходник вроде этого. И везде в проекте используйте только эти элементы и только в той форме, в которой они здесь запечатлены. Появился новый мультиселект? Добавляйте его в «стайлгайд».&lt;/p&gt;
+
+&lt;p&gt;Причем не стоит ограничиваться только элементами. Создайте набор главных цветов интерфейса — это тоже полезно. В ряде случаев мы даже делаем список основных отступов, используемых в макетах.&lt;/p&gt;
+
+&lt;p&gt;Если верстальщик опытный, он сразу сделает себе такой же «стайлгайд» в вебе, откуда просто будет копировать элементы. Да и вообще, преимуществ у «стайлгайдов» тьма: от удобства в развитии проекта до ускорения работы всех, причастных к фронтенду.&lt;/p&gt;
+
+&lt;h2 id=&quot;Изучите-основы-верстки&quot;&gt;Изучите основы верстки&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_02.jpg&quot; alt=&quot;Изучите основы верстки :: Дизайнь как верстальщик&quot; title=&quot;Изучите основы верстки :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Одна из самых спорных рекомендаций, пожалуй. Многие мне возразят, и это нормально. Но веб-дизайнер, понимающий хотя бы самые базовые принципы HTML и CSS, по моему опыту, стоит дороже и работать с ним приятнее. Такой дизайнер понимает, что есть шесть типов заголовков, что параграф обычно имеет отступ снизу, что списки могут быть вложенными и прочее. И здесь речь не просто о типографике — тут важно, чтобы макет был не только красивым, но и реализуемым, легким (о скорости мы еще поговорим ниже).&lt;/p&gt;
+
+&lt;p&gt;Это не сложно, поверьте. За пару недель ежедневных часовых занятий можно приобрести базовое понимание основных HTML-тегов и возможностей CSS. Никто не просит вас, дорогие творцы, становиться технарями и вникать в дебри псевдоэлементов. Но следует понимать, какие из ваших решений могут быть реализованы в вебе, а для каких потребуется заключать союз с нечистой силой.&lt;/p&gt;
+
+&lt;h2 id=&quot;Научитесь-работать-по-гридам&quot;&gt;Научитесь работать по гридам&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_03.jpg&quot; alt=&quot;Научитесь работать по гридам :: Дизайнь как верстальщик&quot; title=&quot;Научитесь работать по гридам :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Гриды, сетка, колонки — суть одна. Если упростить, то модульная сетка для дизайнера представляет из себя условное разделение макета на вертикальные колонки одинаковой ширины, с определенными отступами между ними. Стоит один раз распределить элементы макета внутри этих колонок, и &lt;del&gt;обратного пути уже не будет&lt;/del&gt; вы поймете, насколько это удобно.&lt;/p&gt;
+
+&lt;p&gt;Привычка работать по сетке — одна из самых полезных (после утренних пробежек, раздельного питания и использования хоткеев). Она позволяет упорядочивать визуальную структуру документа, с легкостью переиспользовать блоки, ускоряя разработку как дизайна, так и верстки. Кроме того, именно на гридах строятся популярные front-end фреймворки вместе с адаптивностью, а это важно — и я к этому еще вернусь.&lt;/p&gt;
+
+&lt;p&gt;Для дизайнера же гриды хороши еще и тем, что при переносе его макета в верстку шанс точного «совпадения» возрастает во много раз. Для верстальщика в целом упрощается все. Опытный фронтендщик просто создаст у себя в проекте точно такие же колонки, и не будет тратить время на попиксельное сравнение отдельных блоков, не говоря уже об адаптивности.&lt;/p&gt;
+
+&lt;p&gt;Тем, кто работает в Photoshop’е, могу предложить даже небольшую &lt;noindex&gt;&lt;a href=&quot;https://drive.google.com/open?id=0By7LNipPIB05SG14MnR6eGp4cXc&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;подборку шаблонов&lt;/a&gt;&lt;/noindex&gt;. Для предпочитающих Sketch такой штуки у меня, увы, нет — но она есть в гугле.&lt;/p&gt;
+
+&lt;h2 id=&quot;Помните-про-адаптивность&quot;&gt;Помните про адаптивность&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_04.jpg&quot; alt=&quot;Помните про адаптивность :: Дизайнь как верстальщик&quot; title=&quot;Помните про адаптивность :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;В предыдущем пункте она упоминается аж два раза не просто так. Игнорировать мобильный трафик сейчас — настоящее преступление, за которое нужно ввести порку розгами. Вот уже два года, как мне перестали попадаться проекты, в которых не нужно было бы реализовывать корректное отображение сайта на экранах мобильных устройств. Вместе с тем многие дизайнеры продолжают создавать только один вариант дизайна — основной, самый широкий.&lt;/p&gt;
+
+&lt;p&gt;Что происходит после этого? У верстальщика, получившего такой макет, есть несколько вариантов действий:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;запросить недостающие компоновки страниц, под остальные разрешения;&lt;/li&gt;
+  &lt;li&gt;сделать только то, что ему прислали — то есть неадаптивную верстку;&lt;/li&gt;
+  &lt;li&gt;попытаться самостоятельно адаптировать имеющийся дизайн.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Первый вариант частенько нереален, потому как дизайнер уже получил свои деньги, а заказчик — жлоб (например). Второй вариант отпадает, потому что тогда фронтендщик становится соучастником и рискует оказаться наказанным. Чаще всего в таком случае отрабатывается третий вариант. И получается так себе, потому что верстальщик, даже очень хороший — это не дизайнер. Исключения крайне редки.&lt;/p&gt;
+
+&lt;p&gt;Так вот, дизайнеры. Очень прошу, делайте несколько вариантов макетов, под разные разрешения. Этим вы сэкономите время на разработку и повысите шансы положить проект в портфолио, потому что за его реализацию не будет стыдно. Ну и в очередной раз докажете собственный профессионализм.&lt;/p&gt;
+
+&lt;p&gt;И к слову о гридах. Использование модульной сетки в дизайне очень упрощает проектирование адаптивности. Мне, например, уже как-то привычны следующие шаги (ширина макетов): 1440px, 1200px, 960px, 768px, 600px и 320px. Иногда заменяю 600 на 480, но это уже индивидуальности проекта. При переходе на каждый шаг уменьшается ширина колонки, но расстояние между ними остается прежним. Найти уже готовые шаблоны можно по ссылке в пункте выше.&lt;/p&gt;
+
+&lt;h2 id=&quot;Будьте-в-курсе-трендов&quot;&gt;Будьте в курсе трендов&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_05.jpg&quot; alt=&quot;Будьте в курсе трендов :: Дизайнь как верстальщик&quot; title=&quot;Будьте в курсе трендов :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;В общем-то, банальный совет. Но буквально на днях я обнаружил дизайнера, не знакомого с принципами material design. Ну то есть общее понимание концепции у него было, а вот о &lt;noindex&gt;&lt;a href=&quot;https://material.google.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;«гайдлайнах» material&lt;/a&gt;&lt;/noindex&gt; он слыхом не слыхивал. Конечно, у матерого дизайнера изучение практически любого направления не займет много времени, но иногда незнание основ может помешать получить вкусный и интересный заказ.&lt;/p&gt;
+
+&lt;p&gt;Однако, помимо направлений в дизайне как таковых, существуют еще и популярные фронтенд-фреймворки. Их задача — упростить и ускорить разработку внешней части сайта, включая верстку, js и прочее. Если вы, дизайнер, работаете в команде, которая предпочитает использовать определенный фреймворк, изучение его базовых особенностей сохранит время и нервы всей команды. И речь тут не только о цветовой схеме или компоновке блоков, не стоит загонять себя в чересчур жесткие рамки, вы же творец. Речь, скорее, о базовых элементах или особенностях анимации. Например, в некоторых фреймворках боковое меню, появляющееся на небольших экранах, накладывается поверх контента, а не сдвигает его. И изменить такое поведение порой стоит немалых жертв. Поэтому не стесняйтесь общаться с frontend-разработчиками на самых первых этапах, узнавайте о фреймворках и их особенностях.&lt;/p&gt;
+
+&lt;p&gt;Из популярных могу назвать:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;noindex&gt;&lt;a href=&quot;http://getbootstrap.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Bootstrap&lt;/a&gt;&lt;/noindex&gt;
+    &lt;p&gt;Не нуждается в особом представлении. Почти все, что нужно на старте — есть из коробки. Самый популярный в мире.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;noindex&gt;&lt;a href=&quot;http://foundation.zurb.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Foundation&lt;/a&gt;&lt;/noindex&gt;
+    &lt;p&gt;Гибкий, современный, настоящий комбайн. Достойная альтернатива бутстрапу.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;noindex&gt;&lt;a href=&quot;http://materializecss.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Materialize&lt;/a&gt;&lt;/noindex&gt;
+    &lt;p&gt;Заточен под material design, что видно из названия. Включает в себя также анимации в стиле материал.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;noindex&gt;&lt;a href=&quot;https://getmdl.io/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Material Design Lite&lt;/a&gt;&lt;/noindex&gt;
+    &lt;p&gt;По сути, брат предыдущего. Имеет в себе все необходимые для быстрого создания проекта в стиле material.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;noindex&gt;&lt;a href=&quot;http://ionicframework.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Ionic&lt;/a&gt;&lt;/noindex&gt;
+    &lt;p&gt;Фреймворк для создания мобильных приложений на базе cordova. По сути, реализуется той же HTML-версткой, а потом компилится под разные платформы.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;noindex&gt;&lt;a href=&quot;http://mobileangularui.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Mobile Angular UI&lt;/a&gt;&lt;/noindex&gt;
+    &lt;p&gt;То же самое, что и предыдущий, но использует верстку bootstrap.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Frontend-фреймворков тьма, все перечислять не стану. В случае необходимости сами загуглите.&lt;/p&gt;
+
+&lt;h2 id=&quot;Учитывайте-скорость-загрузки-сайта&quot;&gt;Учитывайте скорость загрузки сайта&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_06.jpg&quot; alt=&quot;Учитывайте скорость загрузки сайта :: Дизайнь как верстальщик&quot; title=&quot;Учитывайте скорость загрузки сайта :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Да, скорость загрузки и работы сайта во многом закладывается на этапе дизайна. Знаю, для кого-то это будет новостью. Но стоит вдуматься — и это становится очевидно. От чего зависит скорость загрузки сайта? Исключим сервер и кривые руки фронтедеров. Статика. Изображения, скрипты, стили.&lt;/p&gt;
+
+&lt;p&gt;С картинками, вроде, все понятно — чем их и они меньше, тем быстрее пользователь увидит сайт в том виде, на который вы рассчитываете. Но это ведь не повод отказываться от фоновых изображений, верно? Современные технологии разработки позволяют верстальщикам подставлять разные изображения на разных разрешениях. Так зачем на экраны мобильных устройств тянуть те же мегабитные фоны, что и на десктопах? Подготовьте несколько вариантов фона для разных разрешений — хотя бы просто в макетах, верстальщик сам их вынет оттуда. Ну или предоставьте верстальщику готовую папку с фонами, если Вы совсем уж святой.
+По возможности, используйте векторную графику для иконок или простых изображений — она и весит меньше, и выглядит лучше.&lt;/p&gt;
+
+&lt;p&gt;Скрипты не во власти дизайна, это очевидно. Но если во время дизайна понавтыкать в каждый квадратный сантиметр сайта параллаксы, анимированное появления блоков и прочие свистелки, у кого-то сайт не загрузится никогда. Очень прошу, дорогие дизайнеры, не увлекайтесь анимацией, если того не требует ТЗ.&lt;/p&gt;
+
+&lt;p&gt;О стилях же я уже писал в самом начале. Если в макете отсутствует унификация элементов, а верстальщик попался добросовестный и усердный, размер таблицы стилей будет сопоставим с размером изображений на сайте. И все это придется тащить браузеру, покуда он не закэширует все это безобразие. Мне в одном проекте встретился файл стилей размером с небольшого котенка — 17 мегабайт. И это в минифицированном виде. До сих пор кошмары снятся.&lt;/p&gt;
+
+&lt;h2 id=&quot;Изучите-наконец-векторную-графику&quot;&gt;Изучите, наконец, векторную графику&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_07.jpg&quot; alt=&quot;Изучите, наконец, векторную графику :: Дизайнь как верстальщик&quot; title=&quot;Изучите, наконец, векторную графику :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Мой самый любимый и одновременно ненавистный пункт. Именно он пришел мне на ум первым, когда я собрался писать эту статью. Прошу дизайнеров отнестись к нему со всей серьезностью.&lt;/p&gt;
+
+&lt;p&gt;Речь, конечно, об SVG. Это такой формат векторных изображений, о котором в последнее время говорят все чаще. И я не стану плодить сущности, рассказывая о его преимуществах. Я расскажу о проблеме, которая с ним связана.&lt;/p&gt;
+
+&lt;p&gt;Про себя я ее обзываю «псевдо-SVG». Это когда дизайнер дает верстальщику SVG-файл, но тот не может его нигде использовать. Весьма распространенное явление. Причина простая — дизайнер, работая в фотошопе, просто экспортирует иконку как SVG (по ctrl+shift+alt+w), хотя она является растровой. Внутри таких бесполезных эсвэгэшек обычно лежит текст с:&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;image&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xlink:href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;data:img/png;base64...
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Такое изображение не получится масштабировать, да и разницы между ним и растром, по сути, никакой.&lt;/p&gt;
+
+&lt;p&gt;Происходит это от того, что дизайнер не очень понимает, что такое SVG, и не умеет правильно его использовать. Для таких я бы рекомендовал, все-таки, изучить формат. Если же вы работаете в фотошопе, то стараться такие изображения создавать «перьями». Или использовать готовые наборы иконок. Пользователям Sketch тут проще — у них вектор получается по умолчанию. В любом случае, если вы хотите быть «дизайнером будущего», знать SVG необходимо. Вот несколько полезных ресурсов на русском языке: &lt;noindex&gt;&lt;a href=&quot;https://svgontheweb.com/ru/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;раз&lt;/a&gt;&lt;/noindex&gt;, &lt;noindex&gt;&lt;a href=&quot;https://developer.mozilla.org/ru/docs/Web/SVG&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;два&lt;/a&gt;&lt;/noindex&gt;, &lt;noindex&gt;&lt;a href=&quot;http://css-live.ru/articles/karmannoe-rukovodstvo-po-napisaniyu-svg-vvedenie.html&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;три&lt;/a&gt;&lt;/noindex&gt;.&lt;/p&gt;
+
+&lt;p&gt;Для уменьшения количества запросов к серверу (привет, HTTP/2), да и просто для удобства использования все SVG-иконки на сайте очень часто объединяют в спрайты — этакие комбинированные файлы. Создать SVG-спрайт можно тремя способами:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;вручную, копируя содержимое каждого SVG в один общий файл;&lt;/li&gt;
+  &lt;li&gt;программно, при помощи различных библиотек;&lt;/li&gt;
+  &lt;li&gt;посредством специальных онлайн-сервисов.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Первый способ оставим людям, у которых много свободного времени. Со вторым все понятно — он используется верстальщиком и требует определенных навыков. А вот третий способ может подойти и дизайнеру. К примеру, если он ведет развивающийся проект и регулярно добавляет в него новые иконки. Тогда дизайнер может самостоятельно изменять SVG-спрайт, например, через этот вот сервис и отправлять готовый файл на фронтенд. Мелочь, а приятно.&lt;/p&gt;
+
+&lt;h2 id=&quot;Прикладывайте-шрифты&quot;&gt;Прикладывайте шрифты&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/2019/design_as_a_coder_08.jpg&quot; alt=&quot;Прикладывайте шрифты :: Дизайнь как верстальщик&quot; title=&quot;Прикладывайте шрифты :: Дизайнь как верстальщик&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Любой дизайнер, думаю, знаком со &lt;noindex&gt;&lt;a href=&quot;http://www.w3schools.com/cssref/css_websafe_fonts.asp&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;списком «безопасных» веб-шрифтов&lt;/a&gt;&lt;/noindex&gt;. Однако их чаще всего не достаточно. Когда я занимался версткой, мне регулярно попадались макеты с проприетарными или просто редкими шрифтами, при виде которых фотошоп разрывался от ярости предупреждающими окнами. Конечно, многие дизайнеры, отправляя финальный макет, прикладывают к нему и архив со шрифтами (а многие не прикладывают). Но даже имея «на руках» необходимый шрифт в формате .ttf или .otf, не всегда получается правильно внедрить его в верстку.&lt;/p&gt;
+
+&lt;p&gt;Хочу открыть небольшую тайну дизайнерам. По крайней мере тем из них, кто с ней еще не знаком. Каждый шрифт, который вы хотите использовать в макете (если он не входит в список «безопасных»), должен быть представлен как минимум в четырех форматах: ttf, eot, woff (или woff2, а лучше оба) и svg. А если вы используете проприетарный шрифт, то его использование в вебе может быть несколько осложнено. Да и не совсем законно.&lt;/p&gt;
+
+&lt;p&gt;Я всегда советую подбирать шрифт из &lt;noindex&gt;&lt;a href=&quot;https://fonts.google.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Google Fonts&lt;/a&gt;&lt;/noindex&gt;, предварительно посмотрев, есть ли у него поддержка кириллицы. Если же этот вариант не подходит, то стоит проверить проприетарность шрифта или сразу подготовить архив со всеми необходимыми форматами. Сконвертировать их можно при любезной помощи &lt;noindex&gt;&lt;a href=&quot;https://www.fontsquirrel.com/tools/webfont-generator&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;этого сервиса&lt;/a&gt;&lt;/noindex&gt; (не забудьте переключиться в режим «EXPERT…» и в секции «Subsetting», отметив «Custom Subsetting…», проставить галочку рядом с «Cyrillic»).&lt;/p&gt;
+
+&lt;p&gt;Ибо нет более надежного способа покорить сердце верстальщика, чем вручить ему готовый набор шрифтов для интеграции в веб.&lt;/p&gt;
+
+&lt;h2 id=&quot;Эпилог&quot;&gt;Эпилог&lt;/h2&gt;
+
+&lt;p&gt;Конечно, множество моментов оставлено здесь без внимания: иерархия и наложение слоев в исходниках, типографика, наборы иконок и многое, многое другое. Однако статья и так получилась объемной, а большинство того, о чем я не написал, прекрасно находится в интернете по запросу «советы дизайнеру».&lt;/p&gt;
+
+&lt;p&gt;И да, о смысле. Если этот пост помирит хотя бы одну пару дизайнера с верстальщиком, или сэкономит десяток-другой человекочасов — значит, время на его написание было потрачено не зря.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 09 Oct 2016 18:08:00 +0300</pubDate>
+        <link>https://blog.itsail.ru/blog/design-as-a-coder/</link>
+        <guid isPermaLink="true">https://blog.itsail.ru/blog/design-as-a-coder/</guid>
+        
+        <category>Дизайн</category>
+        
+        
+        <category>blog</category>
+        
+      </item>
+    
+      <item>
+        <title>Организация кода для CSS-препроцессора</title>
+        <description>&lt;p&gt;Недавно прочитал статью на Frontender Magazine «&lt;noindex&gt;&lt;a href=&quot;http://frontender.info/organizing-your-css-code-for-preprocessors/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;организация кода для CSS препроцессоров&lt;/a&gt;&lt;/noindex&gt;», в которой рассказывается о нескольких вариантах организации файловой структуры стилей в проекте, и решил поделиться своими размышлениями на эту тему. Я полагаю, что вы уже прочитали эту небольшую статью.&lt;/p&gt;
+
+&lt;p&gt;Окей, начнём, пожалуй с того, что я выскажу своё «фи» относительно представленных в статье архитектурах. Структуру, носящую название «функциональное разделение» сразу можно забросить, так как она представляет собой мусорку, в которой просто лежат файлы. Вариант «Катана» плох тем, что файл стилей контента будет бесконечным и не совсем ясно, как искать нужные стили. Шаблонное или страничное распределение плохо тем, что количество страниц может быть невелико, а их содержимое достигать предельных значений. Архитектура, предложенная Крисом Койером выглядит ужасно из-за того, что она олицетворяет мусорку из файлов. Коктейль «Хьюго» очень хорошо смотрится на фоне остальных решений, но страдает логикой распределения файлов по директориям. Почему страдает логикой? — вы скоро это узнаете. Относительно дополнения от Игоря Зенича я ничего сказать не могу, потому что не исповедую БЭМ-методологию.&lt;/p&gt;
+
+&lt;p&gt;Давайте более подробно пройдёмся по коктейлю «Хьюго». Мне непонятна логика разделения файлов препроцессора на директории. Ниже я сформировал несколько вопросов, на которые ответить себе я так и не смог:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Почему файл типографики (&lt;code class=&quot;highlighter-rouge&quot;&gt;_typography.less&lt;/code&gt;) находится в директории &lt;strong&gt;base&lt;/strong&gt;, а файл стилей кнопок (&lt;code class=&quot;highlighter-rouge&quot;&gt;_buttons.less&lt;/code&gt;) — в директории &lt;strong&gt;components&lt;/strong&gt;, ведь кнопки — это базовый элемент любой страницы.&lt;/li&gt;
+  &lt;li&gt;Почему файл глобальных констант (&lt;code class=&quot;highlighter-rouge&quot;&gt;_variables.less&lt;/code&gt;) находится в директории помощников? — автор предполагает, что переменные, объявленные в этом файле являются вспомогательными, а не глобальными?&lt;/li&gt;
+  &lt;li&gt;Почему примеси собраны в одном файле (&lt;code class=&quot;highlighter-rouge&quot;&gt;_mixins.less&lt;/code&gt;), а не вынесены в отдельную директорию? Ведь на большом проекте примеси могут исчисляться десятками и иметь солидные размеры, например, если это генератор сетки.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Как бы я улучшил коктейль «Хьюго»? — придумал свой коктейль, добавив больше логики и уделил должное внимание разбиению файлов препроцессора на директории. Итак, встречайте мои размышления на тему идеальной файловой структуры организации стилей проекта.&lt;/p&gt;
+
+&lt;p&gt;Просто взгляните на представленную ниже структуру и попробуйте ответить на вопрос — «куда я должен поместить файл стилей иконок?».&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-tree&quot;&gt;├── components/
+│   └── _navbar.less
+├── mixins/
+│   ├── _buttons.less
+│   └── _clearfix.less
+├── modules/
+│   ├── _buttons.less
+│   ├── _forms.less
+│   ├── _grid.less
+│   ├── _lists.less
+│   ├── _normalize.less
+│   ├── _scaffolding.less
+│   ├── _tables.less
+│   └── _typography.less
+├── pages/
+│   └── _home.less
+├── partials/
+│   ├── _footer.less
+│   ├── _header.less
+│   └── _main.less
+├── styles.less
+└── _variables.less
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Если вы ответили, что файл стилей иконок нужно поместить в директорию &lt;strong&gt;modules&lt;/strong&gt;, то вы уже поняли суть моей структуры. Если же нет, то будем разбираться вместе.&lt;/p&gt;
+
+&lt;p&gt;Но перед тем как перейти к подробному разбору структуры, я хочу сказать, что в зависимости от задач здесь могут добавляться дополнительные директории, например, такие как &lt;strong&gt;library&lt;/strong&gt;, &lt;strong&gt;helpers&lt;/strong&gt;, &lt;strong&gt;themes&lt;/strong&gt;. Директория &lt;strong&gt;library&lt;/strong&gt; появляется в том случае, если проект использует библиотеки, которые невозможно найти в bower или npm. Директория &lt;strong&gt;helpers&lt;/strong&gt; добавляется, если проект требует использования помощников (выравнивание текста, отступы и т.д.). И, наконец, директорию &lt;strong&gt;themes&lt;/strong&gt; следует создавать в том случае, если в проекте предусмотрены дополнительные темы.&lt;/p&gt;
+
+&lt;p&gt;Теперь обратимся к файлу &lt;code class=&quot;highlighter-rouge&quot;&gt;styles.less&lt;/code&gt;, который является точкой входа для всех стилей. Именно на него настраивается компилятор, и именно он соединяет все файлы препроцессора воедино.&lt;/p&gt;
+
+&lt;p&gt;К слову, я использую плагин &lt;noindex&gt;&lt;a href=&quot;https://www.npmjs.com/package/less-plugin-glob&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;less-plugin-glob&lt;/a&gt;&lt;/noindex&gt; для препроцессора Less, который позволяет импортировать файлы на основе glob-паттерна.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-less&quot;&gt;// Settings
+@bowerDir: &quot;bower_components&quot;;
+@npmDir: &quot;node_modules&quot;;
+
+// Core
+@import &quot;_variables&quot;;
+
+// Mixins
+@import &quot;mixins/**&quot;;
+
+// Library
+@import &quot;modules/_normalize&quot;;
+
+// Package managers
+@import &quot;@{bowerDir}/xy-flexbox/xy&quot;;
+
+// Modules
+@import &quot;modules/!(_normalize)**&quot;;
+@import &quot;components/**&quot;;
+@import &quot;partials/**&quot;;
+@import &quot;pages/**&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Довольно легко догадаться, что файл &lt;code class=&quot;highlighter-rouge&quot;&gt;_variables.less&lt;/code&gt; содержит глобальные константы. Под ними следует понимать переменные, необходимые всем модулям, компонентам или даже примесям. Однако, в этом файле не должно быть переменных, необходимых только одному компоненту или только одной теме — такие переменные описываются непосредственно в файле компонента или темы.&lt;/p&gt;
+
+&lt;h2 id=&quot;mixins-partials-и-pages&quot;&gt;Mixins, partials и pages&lt;/h2&gt;
+
+&lt;p&gt;Директория &lt;strong&gt;mixins&lt;/strong&gt; содержит все примеси, используемые в проекте. В идеализированном случае, одна примесь — один файл, но никто не запрещает, допустим, написать две примеси для кнопок в одном файле.&lt;/p&gt;
+
+&lt;p&gt;Директория &lt;strong&gt;partials&lt;/strong&gt; обычно включает в себя три файла стилей, которые стилизуют шапку (header), подвал (footer) и то, что между ними — центральную часть (main) сайта. Если вам необходимо поменять цвет фона шапки, то соответствующее свойство следует написать именно в файл &lt;code class=&quot;highlighter-rouge&quot;&gt;_header.less&lt;/code&gt;, а не для каждого компонента, который используется в шапке. Точно такая же история и с подвалом, и с центральной частью.&lt;/p&gt;
+
+&lt;p&gt;В директорию &lt;strong&gt;pages&lt;/strong&gt; складываются все файлы специфичных стилей для конкретных страниц. Так уж заведено, что каждая страница имеет уникальный для неё класс, присвоенный тегу &lt;code class=&quot;highlighter-rouge&quot;&gt;body&lt;/code&gt;. Например, главная страница сайта имеет у тега &lt;code class=&quot;highlighter-rouge&quot;&gt;body&lt;/code&gt; класс &lt;code class=&quot;highlighter-rouge&quot;&gt;page-home&lt;/code&gt;, а страницы документации и полной версии записи (поста) имеет классы, соответственно, &lt;code class=&quot;highlighter-rouge&quot;&gt;page-docs&lt;/code&gt; и &lt;code class=&quot;highlighter-rouge&quot;&gt;page-post&lt;/code&gt;. Постараюсь ответить на вопрос: «что должно находиться в этих файлах?». Ответ довольно прост — специфичные для этой страницы стили, например, для изменения отображения какого-либо компонента.&lt;/p&gt;
+
+&lt;h2 id=&quot;modules-и-components&quot;&gt;Modules и components&lt;/h2&gt;
+
+&lt;p&gt;Вот мы и подошли к самому важному — &lt;strong&gt;модулям&lt;/strong&gt; и &lt;strong&gt;компонентам&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Модуль&lt;/strong&gt; — это кирпичик, из которого строятся страницы или компоненты. Модуль включает в себя основные стили для элемента, который он пытается стилизовать. Например, файл &lt;code class=&quot;highlighter-rouge&quot;&gt;_buttons.less&lt;/code&gt; стилизует кнопки и предоставляет различные вариации их отображения: цветные кнопки, групповые кнопки, кнопка как ссылка. Ещё одним примером может служить файл &lt;code class=&quot;highlighter-rouge&quot;&gt;_tables.less&lt;/code&gt;, который стилизует таблицы и предоставляет, допустим, следующие их вариации: таблица с рамкой, таблица с «зеброй» и т.д.&lt;/p&gt;
+
+&lt;p&gt;Примеры модулей:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Кнопки&lt;/li&gt;
+  &lt;li&gt;Элементы форм&lt;/li&gt;
+  &lt;li&gt;Таблицы&lt;/li&gt;
+  &lt;li&gt;Простые списки&lt;/li&gt;
+  &lt;li&gt;Типографика&lt;/li&gt;
+  &lt;li&gt;Сетка&lt;/li&gt;
+  &lt;li&gt;Какие-то общие стили проекта (&lt;code class=&quot;highlighter-rouge&quot;&gt;_scaffolding.less&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Теперь я отвечу на вопрос: «почему файл normalize находится в директории модулей?». Ответ довольно прост: потому, что ради одного файла нет смысла создавать целую директорию &lt;strong&gt;library&lt;/strong&gt;, учитывая то, что этот файл может быть отредактирован (например, убраны стили по умолчанию для таблиц).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Компонент&lt;/strong&gt; — это цельный блок, из которого строится страница. Компонент включает в себя модули и, если это требуется, другие компоненты. Предполагается, что компонент независим и может быть с легкостью и без проблем с отображением, выдернут из одного контекста использования и вставлен в другой.&lt;/p&gt;
+
+&lt;p&gt;Такая идея используется в методологии &lt;noindex&gt;&lt;a href=&quot;http://rscss.io/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;RSCSS&lt;/a&gt;&lt;/noindex&gt; и &lt;noindex&gt;&lt;a href=&quot;https://ru.bem.info/method/key-concepts/#Блок&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;БЭМ-методологии&lt;/a&gt;&lt;/noindex&gt; с той лишь разницей, что в их понимании блок — это форма, логотип, список ссылок и, наконец, глобальное меню, а здесь компонент — это нечто цельное, то есть лишь глобальное меню.&lt;/p&gt;
+
+&lt;p&gt;Вообще, говорить здесь о методологиях слегка неправильно, потому что мы описываем файловую структуру директории стилей, а не очередную методологию. Разумеется, вы можете создавать компоненты в бесчисленном количестве и так, как вам это удобно.&lt;/p&gt;
+
+&lt;p&gt;Примеры компонентов:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Глобальная навигация&lt;/li&gt;
+  &lt;li&gt;Dropdown-меню&lt;/li&gt;
+  &lt;li&gt;Рекламные блоки&lt;/li&gt;
+  &lt;li&gt;Подсветка кода&lt;/li&gt;
+  &lt;li&gt;Список статей&lt;/li&gt;
+  &lt;li&gt;Jumbotron&lt;/li&gt;
+  &lt;li&gt;Блок социальных кнопок&lt;/li&gt;
+  &lt;li&gt;Список категорий или тегов&lt;/li&gt;
+  &lt;li&gt;Стилизация контента статьи&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Я бы хотел остановиться на последнем пункте немного подробнее, так как изначально можно подумать, что стилизация контента статьи предполагает под собой лишь работу с типографикой и с легкостью может перекочевать в модуль. Отчасти это так, но стилизация контента статьи предполагает под собой использование модуля «типографика» и нескольких компонентов, что соответствует описанию компонента.&lt;/p&gt;
+
+&lt;p&gt;Так что же с ответом на вопрос: «куда я должен поместить файл стилей иконок?». Теперь вы уже точно можете сказать, что файл стилей иконок следует поместить в директорию модулей, потому что иконка сама по себе может называться элементом, который включается и в контексте компонента, и без него.&lt;/p&gt;
+
+&lt;h2 id=&quot;Выводы&quot;&gt;Выводы&lt;/h2&gt;
+
+&lt;p&gt;В статье на Frontender Magazine в конце каждого варианта организации стилей проекта приводится список плюсов и минусов, я полагаю, что стоит постараться объективно оценить и предложенный мной вариант:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Плюсы:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Здесь присутствует логика и смысл&lt;/li&gt;
+  &lt;li&gt;Строгое разбиение по предназначению&lt;/li&gt;
+  &lt;li&gt;Легко поддерживать вручную&lt;/li&gt;
+  &lt;li&gt;Каждый файл обещает быть небольшим по объему&lt;/li&gt;
+  &lt;li&gt;Вы всегда знаете, что класс типа .navbar можно найти в директории components/_navbar.less&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Минусы:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Много директорий и файлов&lt;/li&gt;
+  &lt;li&gt;Нужно думать: что есть модуль, а что есть компонент?&lt;/li&gt;
+  &lt;li&gt;Иногда понятие компонента может быть расплывчатым&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 07 Mar 2016 12:00:00 +0300</pubDate>
+        <link>https://blog.itsail.ru/blog/organization-code-for-css-preprocessor/</link>
+        <guid isPermaLink="true">https://blog.itsail.ru/blog/organization-code-for-css-preprocessor/</guid>
+        
+        <category>Разработка</category>
         
         
         <category>blog</category>

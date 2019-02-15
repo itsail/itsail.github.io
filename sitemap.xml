@@ -29,6 +29,60 @@
     <priority>1.0</priority>
   </url>
   
+  <url>
+    <loc>https://blog.itsail.ru/blog/8-rules-of-good-manners-bitrix-for-beginners/</loc>
+    
+    <lastmod>2017-12-14</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itsail.ru/blog/html-special-characters/</loc>
+    
+    <lastmod>2017-12-12</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itsail.ru/blog/black-methods-of-website-promotion/</loc>
+    
+    <lastmod>2017-10-30</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itsail.ru/blog/cli-working-with-images-in-linux/</loc>
+    
+    <lastmod>2017-01-09</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itsail.ru/blog/design-as-a-coder/</loc>
+    
+    <lastmod>2016-10-09</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.itsail.ru/blog/organization-code-for-css-preprocessor/</loc>
+    
+    <lastmod>2016-03-07</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
   
   
   
